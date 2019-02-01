@@ -171,7 +171,7 @@ composition(e1, "alter.age") %>%
 ### Diversity
 ```{r}
 alts_diversity_count(e1, "alter.age")
-alts_diversity_entropy(e1, "alter.age")
+alts_diversity_entropy(e1, "alter.age", 7)
 ```
 
 ### Ego-Alter Homophily (EI-Index)

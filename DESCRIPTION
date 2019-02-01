@@ -1,21 +1,23 @@
 Package: egor
 Type: Package
 Title: Import and Analyse Ego-Centered Network Data
-Version: 0.18.08-02
-Date: 2018-08-20
+Version: 0.19.1
+Date: 2019-01-31
 Authors@R: c(
-    person("Markus", "Gamper", email = "m.gamper@uni-koeln.de",
-    role = c("aut")),
-    person("Andreas", "Herz", email = "herzand@uni-hildesheim.de",
-    role = c("aut")),
     person("Till", "Krenz", email = "egor@tillt.net",
     role = c("aut", "cre")),
-    person("Christopher", "McCarty", email = "ufchris@ufl.edu",
-    role = c("aut")),
     person("Pavel N.", "Krivitsky", email="pavel@uow.edu.au",
     role=c("aut")),
     person("Raffaele", "Vacca", email = "r.vacca@ufl.edu",
-    role = c("aut")))
+    role = c("aut")),
+    person("Michal", "Bojanowski", email = "m.bojanowski at icm.edu.pl",
+    role = c("aut")),
+    person("Markus", "Gamper", email = "m.gamper@uni-koeln.de",
+    role = c("ctb")),
+    person("Andreas", "Herz", email = "herzand@uni-hildesheim.de",
+    role = c("aut")),
+    person("Christopher", "McCarty", email = "ufchris@ufl.edu",
+    role = c("ctb")))
 Description: Tools for importing, analyzing and visualizing ego-centered
     network data. Supports several data formats, including the export formats of
     'EgoNet', 'EgoWeb 2.0' and 'openeddi'. An interactive (shiny) app for the
@@ -30,16 +32,17 @@ Imports: igraph, network, shiny, plyr, survey, tidyr, methods, utils,
         purrr
 Suggests: knitr, testthat, rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1.9000
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2018-08-20 20:18:54 UTC; till.krenz
-Author: Markus Gamper [aut],
-  Andreas Herz [aut],
-  Till Krenz [aut, cre],
-  Christopher McCarty [aut],
+Packaged: 2019-01-31 22:10:20 UTC; till.krenz
+Author: Till Krenz [aut, cre],
   Pavel N. Krivitsky [aut],
-  Raffaele Vacca [aut]
+  Raffaele Vacca [aut],
+  Michal Bojanowski [aut],
+  Markus Gamper [ctb],
+  Andreas Herz [aut],
+  Christopher McCarty [ctb]
 Maintainer: Till Krenz <egor@tillt.net>
 Repository: CRAN
-Date/Publication: 2018-08-20 20:40:07 UTC
+Date/Publication: 2019-02-01 16:43:22 UTC

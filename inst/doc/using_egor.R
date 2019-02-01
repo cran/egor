@@ -53,7 +53,7 @@ composition(e1, "alter.age") %>%
 
 ## ------------------------------------------------------------------------
 alts_diversity_count(e1, "alter.age")
-alts_diversity_entropy(e1, "alter.age")
+alts_diversity_entropy(e1, "alter.age", 7)
 
 ## ------------------------------------------------------------------------
 comp_ei(e1, "alter.age", "age")
