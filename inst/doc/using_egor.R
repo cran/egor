@@ -1,7 +1,8 @@
 ## ----setup, include = FALSE----------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  dev.args = list(type = "cairo")
 )
 
 library(knitr)
@@ -10,7 +11,7 @@ library(egor)
 ## ------------------------------------------------------------------------
 data("alters32")
 data("egos32")
-data("edges32") 
+data("aaties32") 
 
 ## ----echo=FALSE----------------------------------------------------------
 alters32 %>%
@@ -21,24 +22,41 @@ egos32 %>%
   head() %>%
   kable(caption = "First rows of ego data.")
 
-edges32 %>%
+aaties32 %>%
   head() %>%
   kable(caption = "First rows of alter-alter tie data.")
 
 ## ------------------------------------------------------------------------
-e1 <- egor(alters.df = alters32,
-           egos.df = egos32,
-           aaties = edges32,
+e1 <- egor(alters = alters32,
+           egos = egos32,
+           aaties = aaties32,
            ID.vars = list(
-             ego = "egoID",
-             alter = "alterID",
-             source = "Source",
-             target = "Target"))
+             ego = ".EGOID",
+             alter = ".ALTID",
+             source = ".SRCID",
+             target = ".TGTID"))
 e1
 
-## ----include=FALSE-------------------------------------------------------
-library(dplyr)
-library(purrr)
+## ------------------------------------------------------------------------
+e1[e1$ego$age.years > 35, ]
+
+## ------------------------------------------------------------------------
+subset(e1, e1$alter$sex == "w", unit = "alter")
+
+## ------------------------------------------------------------------------
+subset(e1, e1$aatie$weight > 0.5, unit = "aatie")
+
+## ------------------------------------------------------------------------
+e1 %>% 
+  filter(income > 36000)
+
+e1 %>% 
+  activate(alter) %>% 
+  filter(country %in% c("USA", "Poland"))
+
+e1 %>% 
+  activate(aatie) %>% 
+  filter(weight > 0.7)
 
 ## ------------------------------------------------------------------------
 summary(e1)
@@ -47,19 +65,19 @@ summary(e1)
 ego_density(e1)
 
 ## ------------------------------------------------------------------------
-composition(e1, "alter.age") %>%
+composition(e1, "age") %>%
   head() %>%
   kable()
 
 ## ------------------------------------------------------------------------
-alts_diversity_count(e1, "alter.age")
-alts_diversity_entropy(e1, "alter.age", 7)
+alts_diversity_count(e1, "age")
+alts_diversity_entropy(e1, "age")
 
 ## ------------------------------------------------------------------------
-comp_ei(e1, "alter.age", "age")
+comp_ei(e1, "age", "age")
 
 ## ------------------------------------------------------------------------
-EI(e1, "alter.age") %>%
+EI(e1, "age") %>%
   head() %>%
   kable()
 
@@ -93,13 +111,9 @@ par(mar=c(0,0,0,0))
 purrr::walk(as_igraph(egor32)[1:4], plot)
 purrr::walk(as_network(egor32)[1:4], plot)
 
-## ------------------------------------------------------------------------
-as_alts_df(egor32, include.ego.vars = TRUE) %>%
-  head() %>%
-  kable(caption = "First rows of global alters data frame.")
+## ----fig.height=6, fig.width=8-------------------------------------------
+plot(egor32)
 
-## ------------------------------------------------------------------------
-as_aaties_df(egor32, include.alt.vars = TRUE) %>%
-  head() %>%
-  kable(caption = "First rows of global alter-alter tie data frame.")
+## ----fig.height=6, fig.width=8-------------------------------------------
+plot(make_egor(32,16), venn_var = "sex", pie_var = "country", type = "egogram")
 
