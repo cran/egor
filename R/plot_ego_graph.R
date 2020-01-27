@@ -1,13 +1,13 @@
 #' @export
 #' @describeIn plot_egor Plots an ego graph.
 plot_ego_graphs <- function(x,
-                            nnumber,
+                            ego_no = 1,
                             x_dim = 1,
                             y_dim = 1,
                             vertex_size_var = NULL,
                             vertex_color_var = NULL,
                             vertex_color_palette = "Heat Colors",
-                            vertex_color_legend_label = NULL,
+                            vertex_color_legend_label = vertex_color_var,
                             vertex_label_var = NULL,
                             edge_width_var = NULL,
                             edge_color_var = NULL,
@@ -23,7 +23,7 @@ plot_ego_graphs <- function(x,
   opar <- par(no.readonly = TRUE)
   on.exit(par(opar))
   par(mfrow = c(y_dim, x_dim))
-  for (i in nnumber:(nnumber + (x_dim * y_dim - 1))) {
+  for (i in ego_no:(ego_no + (x_dim * y_dim - 1))) {
     if (i <= nrow(x$ego)) {
       boxi_color <- "white"
       if (!is.null(highlight_box_col_var)) {
@@ -47,7 +47,8 @@ plot_ego_graphs <- function(x,
         vertex_zoom = vertex_zoom,
         edge_zoom = edge_zoom,
         font_size = font_size,
-        include_ego = include_ego
+        include_ego = include_ego,
+        ...
       )
     }
   }
@@ -55,7 +56,7 @@ plot_ego_graphs <- function(x,
 
 
 plot_one_ego_graph <- function(x,
-                               nnumber,
+                               ego_no,
                                vertex_size_var = NULL,
                                vertex_color_var = NULL,
                                vertex_color_palette = "Heat Colors",
@@ -70,30 +71,31 @@ plot_one_ego_graph <- function(x,
                                edge_zoom = 3,
                                font_size = 1,
                                include_ego = FALSE,
+                               layout = NULL,
                                ...) {
-  x <-
-    slice(x, nnumber)
+  x <- 
+    slice.egor(activate(x, "ego"), ego_no)
+  
   gr <- as_igraph(x, include.ego = include_ego)[[1]]
   if (!sum(igraph::V(gr)) > 0) {
     # Plot Error message.
     plot(
-      NA,
-      xlim = c(1, 10),
-      ylim = c(0.75, 10),
-      type = "n",
-      yaxt = "n",
-      xaxt = "n",
-      ylab = "",
-      xlab = "",
-      bty = "L"
+      NULL ,
+      xaxt = 'n',
+      yaxt = 'n',
+      bty = 'n',
+      ylab = '',
+      xlab = '',
+      xlim = 0:1,
+      ylim = 0:1
     )
-    text(5, 1, 'No network data available for this entry.')
+    text(0.5, 0.5, 'No alter data\n available for \nthis ego.')
     return()
   }
   
   # Default Colors
   colors_ <- blues9
-  e_colors <- grey(0.6)
+  e_colors <- "grey69"
   
   # Vertex Size
   if (!is.null(vertex_size_var)) {
@@ -121,7 +123,7 @@ plot_one_ego_graph <- function(x,
     clrs[is.na(clrs)] <- "#ffffff"
   } else {
     vertex.color <- 1
-    clrs <- "#eeeeff"
+    clrs <- "coral"
   }
   
   # Edge Width
@@ -161,9 +163,14 @@ plot_one_ego_graph <- function(x,
   if (!is.null(vertex_color_var))
     par(mar = c(0.5, 5, 0.5, 0.5))
   
-  #' @importFrom igraph layout.fruchterman.reingold
-  layout_ <-
-    igraph::layout.fruchterman.reingold(gr, weights = edge.width)
+  if (is.null(layout)) {
+    #' @importFrom igraph layout.fruchterman.reingold
+    layout_ <-
+      igraph::layout.fruchterman.reingold(gr, weights = edge.width)
+  } else {
+    layout_ <- layout
+  }
+  
   
   set.seed(1337)
   #' @importFrom igraph plot.igraph

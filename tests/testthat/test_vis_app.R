@@ -1,65 +1,40 @@
 context("test_vis_app.R")
 
-
-
 if (FALSE) {
-  library(shiny)
+  library(purrr)
   library(egor)
   f <- make_egor(50, 50)
-  ab <- filter(e, sex == "w")
+  ab <- filter(f, sex == "w")
+  data("allbus_2010_simulated")
+  raw_data <- allbus_2010_simulated
+  
+  ## -----------------------------------------------------------------------------
+  var_labels <- map_chr(raw_data, ~attr(., "label"))
+  
+  var_labels <- gsub("[,\\.:;><?+()-]", " ", var_labels)
+  var_labels <- gsub("\\s+", "_", trimws(var_labels))
+  
+  ## -----------------------------------------------------------------------------
+  var_labels <- gsub("FREUND_IN_._", "", var_labels)
+  var_labels <- gsub("^KONTAKT_._", "", var_labels)
+  
+  ## -----------------------------------------------------------------------------
+  names(raw_data) <- make.unique(var_labels, sep = "")
+  
+  ## -----------------------------------------------------------------------------
+  split_freunde <- 
+    raw_data %>% 
+    filter(FRAGEBOGENSPLIT_F020 == 1)
+  
+  ## -----------------------------------------------------------------------------
+  e_freunde <- onefile_to_egor(
+    egos = split_freunde,
+    ID.vars = list(ego = "IDENTIFIKATIONSNUMMER_DES_BEFRAGTEN"),
+    netsize = split_freunde$ANZ_GENANNTER_NETZWERKPERS_SPLIT_1,
+    attr.start.col = "GESCHLECHT",
+    attr.end.col = "SPANNUNGEN_KONFLIKTE2",
+    aa.first.var = "KENNEN_SICH_A_B",
+    max.alters = 3)
+  
   egor_vis_app()
 }
-
-e <- make_egor(5, 5)
-
-plot(
-  x = e,
-  x_dim = 2,
-  y_dim = 2,
-  nnumber = 1,
-  vertex_size_var = "age.years",
-  vertex_color_var = "age.years",
-  vertex_color_palette = "Greys",
-  vertex_color_legend_label = "Mushi",
-  edge_width_var = "weight",
-  edge_color_var = "weight",
-  edge_color_palette = "Greys",
-  highlight_box_col_var = "blue",
-  res_disp_vars  = c("sex", "age")
-)
-
-plot(
-  x = e,
-  x_dim = 2,
-  y_dim = 2,
-  nnumber = 1,
-  vertex_size_var = "age.years",
-  vertex_color_var = "age.years",
-  vertex_color_palette = "Greys",
-  vertex_color_legend_label = "Mushi",
-  edge_width_var = "weight",
-  edge_color_var = "weight",
-  edge_color_palette = "Greys",
-  highlight_box_col_var = "sex",
-  res_disp_vars  = c("sex", "age")
-)
-
-plot(
-  x = e,
-  nnumber = 1,
-  venn_var = "age",
-  pie_var = "country",
-  venn_colors = c("white", "lightblue", "mistyrose",
-                  "lightcyan"),
-  show_venn_labels = TRUE,
-  type = "egogram"
-)
-
-plot_egograms(e,
-             1,
-             x_dim = 1,
-             y_dim = 1,
-             "sex",
-             "country",
-             vertex.label = NA,
-             show_venn_labels = FALSE)

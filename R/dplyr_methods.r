@@ -1,4 +1,15 @@
-if (getRversion() >= "2.15.1") utils::globalVariables(c("tmp_ix__", ".srcID", ".tgtID", ".egoID"))
+if (getRversion() >= "2.15.1")
+  utils::globalVariables(
+    c(
+      "tmp_ix__",
+      ".srcID",
+      ".tgtID",
+      ".egoID",
+      "..tmp_unique_altID",
+      "..tmp_unique_srcID",
+      "..tmp_unique_tgtID"
+    )
+  )
 
 # dplyr helper functions
 restore_egor_attributes <- function(result, egor_obj) {
@@ -25,21 +36,44 @@ update_ego_design <- function(result) {
 #' @return An `egor` object with trimmed alter-alter ties (.aaties).
 #' @export
 trim_aaties <- function(object) {
+  # keep only aaties that have .egoID in ego
   object$aatie <-
-    purrr::map_dfr(split(object$aatie, object$aatie$.egoID),
-                   function(x) {
-                     if (nrow(x) > 0) {
-                       alter_subset <- filter(object$alter, .egoID == x$.egoID[[1]])
-                       
-                       filter(
-                         x,
-                         .egoID %in% object$ego$.egoID,
-                         .srcID %in% alter_subset$.altID,
-                         .tgtID %in% alter_subset$.altID
-                       )
-                     } else x
-                   })
+    filter(object$aatie, .egoID %in% object$ego$.egoID)
   
+  # keep only aaties that have .egoID in alters
+  object$aatie <-
+    filter(object$aatie, .egoID %in% unique(object$alter$.egoID))
+  
+  # keep only aaties that have .srcID AND .tgtID in alters
+  object$alter$..tmp_unique_altID <- 
+    paste0(object$alter$.egoID, object$alter$.altID)
+  
+  object$aatie$..tmp_unique_srcID <- 
+    paste0(object$aatie$.egoID, object$aatie$.srcID)
+  
+  object$aatie$..tmp_unique_tgtID <- 
+    paste0(object$aatie$.egoID, object$aatie$.tgtID)
+  
+  object$aatie <- 
+  filter(
+    object$aatie,
+    ..tmp_unique_srcID %in% object$alter$..tmp_unique_altID,
+    ..tmp_unique_tgtID %in% object$alter$..tmp_unique_altID
+  )
+  
+  object$aatie <- 
+    select(object$aatie,
+           -..tmp_unique_srcID, -..tmp_unique_tgtID)
+  
+  object$alter <- 
+    select(object$alter,
+           -..tmp_unique_altID)
+  
+  if (!all(c(".egoID", ".srcID", ".tgtID") %in% names(object$aatie)))
+    #' @importFrom stats setNames
+    object$aatie <-
+    setNames(data.frame(matrix(ncol = 3, nrow = 0)), 
+             c(".egoID", ".srcID", ".tgtID"))
   object
 }
 
@@ -66,9 +100,9 @@ bind_IDs_if_missing <- function(.data, result) {
 return_egor_with_result <- 
   function(.data, result, trim = TRUE) {
     .data[[attr(.data, "active")]] <- result
-    if(trim) {
-      .data <- trim_aaties(.data)
-      trim_alters(.data)
+    if (trim) {
+      .data <- trim_alters(.data)
+      trim_aaties(.data)
     } else .data
   }
 
@@ -573,9 +607,9 @@ group_split.egor <- function(.tbl, ...) {
 #' @export
 #' @noRd
 #' @method group_modify egor
-group_modify.egor <- function(.tbl, .f, ...) {
-  result <- group_modify(.tbl[[attr(.tbl, "active")]], .f, ...)
-  return_egor_with_result(.tbl, result)
+group_modify.egor <- function(.tbl, .f, ..., keep = FALSE) {
+  result <- group_modify(.data[[attr(.data, "active")]], .f, ..., keep = keep)
+  return_egor_with_result(.data, result)
 }
 
 #' #' @export

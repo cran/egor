@@ -4,17 +4,21 @@
 \alias{twofiles_to_egor}
 \title{Import ego-centered network data from two file format}
 \usage{
-twofiles_to_egor(egos, alters, netsize = NULL, ID.vars = list(ego =
-  "egoID", alter = "alterID", source = "Source", target = "Target"),
-  e.max.alters, e.first.var, ego.vars = NULL, selection = NULL, ...)
+twofiles_to_egor(
+  egos,
+  alters,
+  ID.vars = list(ego = "egoID", alter = "alterID", source = "Source", target = "Target"),
+  e.max.alters,
+  e.first.var,
+  selection = NULL,
+  ...
+)
 }
 \arguments{
 \item{egos}{\code{Data frame} containg ego data (egos as cases)}
 
 \item{alters}{\code{Data frame} containing alters data (alters as cases),
 alters are separated by a variable containg an egoID.}
-
-\item{netsize}{\code{Vector} containing values of network size per ego.}
 
 \item{ID.vars}{A named list containing column names of the relevant
 input columns: \describe{
@@ -39,21 +43,17 @@ alter identifier of the destination of a relation.}
 
 \item{e.first.var}{Index or name of the first column in \code{egos} containing edge data.}
 
-\item{ego.vars}{\code{Character vector} naming variables in the egos data,
-in order to copy them in to the long alters \code{dataframe}.}
-
 \item{selection}{\code{Character} naming \code{numeric} variable indicating
 alters selection with zeros and ones.}
 
 \item{...}{additional arguments to \code{\link[=egor]{egor()}}.}
 }
 \value{
-A \code{list} of six objects - the \strong{egoR} object: (1) egos.df: \code{dataframe} of all
-egos and their attributes; (2) alters.df: \code{dataframe} of all alters;
-(3) alters.list: \code{list} of \code{dataframes} of all alters per ego;
-(4) edges: \code{list} of \code{dataframes} with edge lists per network; (5)
-graphs: \code{list} of igraph objects; (6) results: a result \code{dataframe},
-pre-populated with the network size of each network
+An \strong{egor} object is returned. It is a \code{list} of three data frames:
+(1) ego: \code{dataframe} of all
+egos and their attributes;
+(2) alter: \code{dataframe} of all alters;
+(3) aatie: \code{dataframe} of alter alter ties/ edges
 }
 \description{
 This function imports ego-centered network data, stored in two files, where
