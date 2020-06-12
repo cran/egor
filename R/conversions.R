@@ -14,20 +14,29 @@ if (getRversion() >= "2.15.1")
 #' @param directed Logical, indicating if alter-alter relations are directed.
 #' @param ego.attrs Vector of names (character) or indices (numeric) of ego
 #' variables that should be carried over to  the network/
-#' igraph objects.
+#' igraph objects. This is ignored, when `include.ego = FALSE` (default).
 #' @param ego.alter.weights  Vector of names (character) or indices (numeric) of
 #' alter variables that should be carried over to the the
 #' network/ igraph objects, as edge attributes of the ego-alter relations.
+#' This is ignored, when `include.ego = FALSE`` (default).
+#' @param graph.attrs Vector of names (character) or indices (numeric) of
+#' ego variables that are supposed to be carried over to the igraph object
+#' as graph attributes or the network object as network attributes. By 
+#' default `.egoID` is carried over.
 #' @details The names of the variables specified in ego.attr and ego.alter.attr
 #' need to be the same as the names of corresponding alter attributes,
-#' in order for those variables to be complete in the resulting network/ igraph
-#' object (see example).
+#' in order for those variables to be merged successfully in the resulting 
+#' network/ igraph object (see example). 
+#' @examples  
+#' e <- make_egor(3, 22)
+#' as_igraph(e)
 #' @export
 as_igraph <- function(x,
                       directed = FALSE,
                       include.ego = FALSE,
                       ego.attrs = NULL,
-                      ego.alter.weights = NULL) {
+                      ego.alter.weights = NULL,
+                      graph.attrs = ".egoID") {
   UseMethod("as_igraph", x)
 }
 
@@ -37,9 +46,10 @@ as_igraph.egor <- function(x,
                            directed = FALSE,
                            include.ego = FALSE,
                            ego.attrs = NULL,
-                           ego.alter.weights = NULL) {
-  x <- as_nested_egor(x)
-  as_igraph(x, directed, include.ego, ego.attrs, ego.alter.weights)
+                           ego.alter.weights = NULL,
+                           graph.attrs = ".egoID") {
+  x <- strip_ego_design(as_nested_egor(x))
+  as_igraph(x, directed, include.ego, ego.attrs, ego.alter.weights, graph.attrs)
 }
 
 #' @rdname as_igraph
@@ -48,19 +58,32 @@ as_igraph.nested_egor <- function(x,
                                   directed = FALSE,
                                   include.ego = FALSE,
                                   ego.attrs = NULL,
-                                  ego.alter.weights = NULL) {
+                                  ego.alter.weights = NULL,
+                                  graph.attrs = ".egoID") {
   # Create igraphs
   igraphs <-
     mapply(
       FUN = function(x, y)
         igraph::graph.data.frame(
-          d = x,
-          vertices = y,
+          d = x[, names(x) != ".egoID"],
+          vertices = y[, names(y) != ".egoID"],
           directed = directed
         ),
       x$.aaties,
       x$.alts,
       SIMPLIFY = FALSE
+    )
+  
+  # Set graph attributes
+  igraphs <-
+    lapply(
+      igraphs,
+      FUN = function(graph) {
+        for (i in 1:length(graph.attrs)) {
+          graph <- igraph::set_graph_attr(graph, graph.attrs[i], x[graph.attrs[i]])
+        }
+        graph
+      }
     )
   
   # Include Ego
@@ -114,13 +137,7 @@ as_igraph.nested_egor <- function(x,
 #' @export
 as.igraph.egor <- as_igraph
 
-#' Creates a list of statnet's network objects, from an
-#' `egor` object.
-#' @param x An egor Object.
-#' @param directed Logical.
-#' @param include.ego Logical.
-#' @param ego.attrs Names of ego variables.
-#' @param ego.alter.weights Name of ego alter weight variable.
+#' @rdname as_igraph
 #' @export
 #' @importFrom network network
 #' @importFrom network network.initialize
@@ -130,14 +147,10 @@ as_network <- function(x,
                        directed = FALSE,
                        include.ego = FALSE,
                        ego.attrs = NULL,
-                       ego.alter.weights = NULL) {
-  alters_l <-
-    split(x$alter, factor(x$alter$.egoID, levels = x$ego$.egoID))
-  aaties_l <-
-    split(x$aatie, factor(x$aatie$.egoID, levels = x$ego$.egoID))
-  x <- x$ego
-  x$.aaties <- aaties_l
-  x$.alts <- alters_l
+                       ego.alter.weights = NULL,
+                       graph.attrs = ".egoID") {
+  x <- strip_ego_design(as_nested_egor(x))
+
   # Incldude Ego
   if (include.ego) {
     if (is.null(ego.attrs))
@@ -195,8 +208,10 @@ as_network <- function(x,
   
   
   network.data.frame <- function(aaties, alts) {
+    alts <- alts[, names(alts) != ".egoID"]
+    aaties <- aaties[, names(aaties) != ".egoID"]
     if (nrow(aaties) == 0) {
-      n <- network.initialize(0)
+      n <- network::network.initialize(0)
     } else {
       all_alt_IDs <- alts$.altID
       mt <- matrix(0,
@@ -210,7 +225,7 @@ as_network <- function(x,
           mt[colnames(mt) %in% aaties[aaties$.srcID == i , ]$.tgtID, colnames(mt) == i] <-
             1
       }
-      n <- network(mt, directed = FALSE)
+      n <- network::network(mt, directed = FALSE)
     }
     for (i in 1:NCOL(alts))
       n <-
@@ -218,20 +233,32 @@ as_network <- function(x,
     if (NCOL(aaties) > 2)
       for (i in 3:(NCOL(aaties)))
         n <-
-          network::set.edge.attribute(n, names(aaties)[i], aaties[[i]])
+          network::set.edge.attribute(n, names(aaties)[i], as.character(aaties[[i]]))
       n
   }
+  
   networks <- mapply(FUN = network.data.frame,
-                     aaties_l,
-                     alters_l,
+                     x$.aaties,
+                     x$.alts,
                      SIMPLIFY = FALSE)
   
+  # Set network attributes
+  networks <-
+    lapply(
+      networks,
+      FUN = function(network) {
+        for (i in 1:length(graph.attrs)) {
+          network <- network::set.network.attribute(network, graph.attrs[i], x[graph.attrs[i]])
+        }
+        network
+      }
+    )
   
   # Return
   networks
 }
 
-#' @rdname as_network
+#' @rdname as_igraph
 #' @importFrom network as.network
 #' @export
 as.network.egor <- as_network
@@ -259,6 +286,8 @@ as.network.egor <- as_network
 #' # ... adding alter variables
 #' as_aaties_df(egor32, include.alter.vars = TRUE)
 #' @export
+#' @return A `tibble`.
+#' @details These functions are convenience functions for egor's `as_tibble` method.
 as_alters_df <- function(object, include.ego.vars = FALSE) {
   object <- activate(object, "alter")
   as_tibble.egor(object, include.ego.vars = include.ego.vars)

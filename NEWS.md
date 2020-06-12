@@ -1,3 +1,10 @@
+# egor 0.20.06
+
+- we are now using the `srvyr` package to allow for survey designs being reflected in the `egor` object
+- adjustments to work with dplyr 1.0.0
+- feat: Added as.egor.nested_egor()
+- feat: added rowwise_egor()
+
 # egor 0.20.03
 
 - fix: updated clustered_graphs() to work with tibble 3.0.0

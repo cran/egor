@@ -4,8 +4,10 @@
 \name{allbus_2010_simulated}
 \alias{allbus_2010_simulated}
 \title{Simulated Allbus 2010 Data}
-\format{A tibble/ data.frame of 100 simulated respondents/ rows and 981
-variables/ columns. Each variable is a \verb{labelled dbl}.}
+\format{
+A tibble/ data.frame of 100 simulated respondents/ rows and 981
+variables/ columns. Each variable is a \verb{labelled dbl}.
+}
 \usage{
 allbus_2010_simulated
 }
@@ -19,6 +21,6 @@ work with the Allbus data using egor and R - no analytical assumptions should
 be made based on this data!
 }
 \details{
-The dataset contains two ego-centered name generators.
+The dataset contains (simulated!) answers two ego-centered name generators.
 }
 \keyword{datasets}

@@ -3,18 +3,27 @@
 \name{egor}
 \alias{egor}
 \alias{as.egor}
+\alias{as.egor.nested_egor}
 \title{egor - a data class for ego-centered network data.}
 \usage{
 egor(
   alters,
   egos = NULL,
   aaties = NULL,
-  ID.vars = list(ego = "egoID", alter = "alterID", source = "Source", target = "Target"),
-  ego_design = list(~1),
+  ID.vars = list(ego = "egoID", alter = "alterID", source = "Source", target =
+    "Target"),
+  ego_design = NULL,
   alter_design = list(max = Inf)
 )
 
 as.egor(x, ...)
+
+\method{as.egor}{nested_egor}(
+  x,
+  ID.vars = list(ego = ".egoID", alter = ".alterID", source = ".Source", target =
+    ".Target"),
+  ...
+)
 }
 \arguments{
 \item{alters}{either a \code{data.frame} containing the alters
@@ -48,9 +57,10 @@ alter identifier of the destination of a relation.}
 
 }}
 
-\item{ego_design}{A \code{\link{list}} of arguments to \code{\link[survey:svydesign]{survey::svydesign()}}
-specifying the sampling design for the egos. If formulas, they
-can refer to columns of \code{egos.df}.}
+\item{ego_design}{A \code{\link{list}} of arguments to
+\code{\link[srvyr:as_survey_design]{srvyr::as_survey_design()}} specifying the sampling design for
+the egos. If formulas, they can refer to columns of
+\code{egos.df}. \code{NULL} means that no design is set.}
 
 \item{alter_design}{A \code{\link{list}} of arguments specifying nomination
 information. Currently, the following elements are supported:
@@ -75,7 +85,7 @@ ego. \code{.aaties}, in turn, has columns \code{.srcID} and \code{.tgtID} that
 contain the source and the target of the alter-alter relation.
 
 In addition, \code{egor} has two attributes: \code{ego_design}, containing an
-object returned by \code{\link[survey:svydesign]{survey::svydesign()}} specifying the sampling
+object returned by \code{\link[srvyr:as_survey_design]{srvyr::as_survey_design()}} specifying the sampling
 design by which the egos were selected and \code{alter_design}, a
 \code{\link{list}} containing specification of how the alters were
 nominated. See the argument above for currently implemented
@@ -94,6 +104,11 @@ with the rows of \code{egos.df}. Of the three parameters only
 \code{alters.df} is necessary to create an \code{egor} object, and
 \code{egos.df} and \code{aaties.df} are optional.
 }
+\section{Methods (by generic)}{
+\itemize{
+\item \code{as.egor}: Can convert (legacy) \code{nested_egor} object to \code{egor} object.
+}}
+
 \note{
 Column names \code{.alts}, \code{.aaties}, and \code{.egoRow} are reserved
 for internal use of \code{egor} and should not be used to store

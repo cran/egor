@@ -14,9 +14,10 @@ if (getRversion() >= "2.15.1") utils::globalVariables(c(":="))
 #'   relations in the style of an edge list, or a list of data frames
 #'   similar to `alters.df`.
 #' @template ID.vars
-#' @param ego_design A [`list`] of arguments to [survey::svydesign()]
-#'   specifying the sampling design for the egos. If formulas, they
-#'   can refer to columns of `egos.df`.
+#' @param ego_design A [`list`] of arguments to
+#'   [srvyr::as_survey_design()] specifying the sampling design for
+#'   the egos. If formulas, they can refer to columns of
+#'   `egos.df`. `NULL` means that no design is set.
 #' @param alter_design A [`list`] of arguments specifying nomination
 #'   information. Currently, the following elements are supported:
 #'   \describe{\item{\code{"max"}}{Maximum number of alters that an
@@ -47,7 +48,7 @@ if (getRversion() >= "2.15.1") utils::globalVariables(c(":="))
 #'   contain the source and the target of the alter-alter relation.
 #'
 #'   In addition, `egor` has two attributes: `ego_design`, containing an
-#'   object returned by [survey::svydesign()] specifying the sampling
+#'   object returned by [srvyr::as_survey_design()] specifying the sampling
 #'   design by which the egos were selected and `alter_design`, a
 #'   [`list`] containing specification of how the alters were
 #'   nominated. See the argument above for currently implemented
@@ -75,43 +76,49 @@ egor <- function(alters,
                       source = "Source",
                       target = "Target"
                     ),
-                    ego_design = list( ~ 1),
+                    ego_design = NULL,
                     alter_design = list(max = Inf)) {
   
+  # Modify ID name list
+
+  IDv <- modifyList(eval(formals()$ID.vars), ID.vars)
+
   # Check for reserved column names
   
   check_reserved_colnames <-
     function(x, unit_) {
-      if (!is.null(x))
+      if (!is.null(x)) {
+
+        for (idvar in UNIT_IDVARS[[unit_]]) # For each type of IDVAR that the unit has,
+          if (IDv[[idvar]] == IDVARS[[idvar]]) # if the user-specified name for that variable is the same as the canonical one,
+            RESERVED_COLNAMES <- setdiff(RESERVED_COLNAMES, IDv[[idvar]]) # then it's not a problem if it's in the table.
+
         if (any(names(x) %in% RESERVED_COLNAMES))
-          warning(paste0(
+          stop(paste0(
             unit_,
             " dataset uses reserved column name(s): ",
             paste(RESERVED_COLNAMES[RESERVED_COLNAMES %in% names(x)], 
                   collapse = " ")
           ),
           call. = FALSE)
+      }
     }
   
   mapply(check_reserved_colnames,
          list(egos, alters, aaties),
          UNITS)
-  
-  # Modify ID name list
-  
-  IDv <- modifyList(eval(formals()$ID.vars), ID.vars)
-  
+
   # Alters
   
   if (!is_tibble(alters)) {
     alters <- as_tibble(alters)
   }
-  
+
   alters <- select(alters,
-                   !!IDVARS$alter := !!IDv$alter,
+                   !!IDVARS$alter := if (!is.null(aaties) || IDv$alter %in% colnames(alters)) !!IDv$alter,
                    !!IDVARS$ego := !!IDv$ego,
                    everything())
-  
+
   # Egos
   
   if (is.null(egos)) {
@@ -143,26 +150,25 @@ egor <- function(alters,
   # Check ID consistency
   
   if (any(duplicated(egos[[IDVARS$ego]])))
-    warning("Duplicated ego IDs in ego data.", 
-            call. = FALSE)
+    stop("Duplicated ego IDs in ego data.",
+         call. = FALSE)
   
   if (!all(alters[[IDVARS$ego]] %in% egos[[IDVARS$ego]]))
-    warning("There is at least one ego ID in the alter data with no
-            corresponding entry in the ego data.", 
-            call. = FALSE)
+    stop("There is at least one ego ID in the alter data with no corresponding entry in the ego data.",
+         call. = FALSE)
   
   if (!all(c(aaties[[IDVARS$ego]] %in% egos[[IDVARS$ego]])))
-    warning("There is at least one ego ID in the alter-alter data with no
-            corresponding entry in the alter data.", 
-            call. = FALSE)
+    stop("There is at least one ego ID in the alter-alter data with no corresponding entry in the alter data.",
+         call. = FALSE)
   
   # Return
   
   egor <- list(ego = egos,
                alter = alters,
-               aatie = aaties
-  )
+               aatie = aaties)
   class(egor) <- c("egor", class(egor))
+  egor$ego <- .gen.ego_design(egor, ego_design, parent.frame())
+  alter_design(egor) <- alter_design
   activate(egor, "ego")
 }
 
@@ -205,7 +211,7 @@ summary.egor <- function(object, ...) {
   # Meta Data
   cat("\nEgo sampling design:\n")
 #' @importFrom utils capture.output
-  writeLines(paste("  ", capture.output(print(attr(object, "ego_design"))), sep = ""))
+  writeLines(paste("  ", capture.output(print(object$egos))), sep = "")
 
   cat("Alter survey design:\n")
   cat("  Maximum nominations:", attr(object, "alter_design")$max,"\n")
@@ -223,11 +229,22 @@ print.egor <- function(x, ..., n = 3) {
          x[!active_lgl])
   
   purrr::pwalk(list(y, names(y), c(TRUE, FALSE, FALSE)), function(x, y, z) {
+    design <- NULL
+    if ("tbl_svy" %in% class(x)) {
+      x <- x$variables
+      design <- " with survey design"
+    }
+      
+    tcm <- tibble::trunc_mat(x, n = min(n,nrow(x)))
+    
+    if (is_grouped_df(x)) tcm$summary <- paste(tcm$summary, collapse = " ")
+    
     if (z)
-      cat(paste0("# ", toupper(y), " data (active)", "\n"))
+      cat(paste0("# ", toupper(y), " data", design ," (active): ", tcm$summary[1], "\n"))
     else
-      cat(paste0("# ", toupper(y), " data \n"))
-    print(tibble::trunc_mat(x, n = n))
+      cat(paste0("# ", toupper(y), " data", design ,": ", tcm$summary[1], "\n"))
+
+    print(tcm$mcf)
   })
   invisible(x)
 }
@@ -239,8 +256,64 @@ as.egor <- function(x, ...) UseMethod("as.egor")
 
 #' @export
 #' @noRd
+#' @method as.egor egor
 as.egor.egor <- function(x, ...) x
 
+#' @export
+#' @describeIn egor Can convert (legacy) `nested_egor` object to `egor` object.
+#' @method as.egor nested_egor
+as.egor.nested_egor <- function(x, ID.vars = list(
+  ego = ".egoID",
+  alter = ".alterID",
+  source = ".Source",
+  target = ".Target"
+), ...) {
+  
+  if (has_ego_design(x)) x <- x$variables
+  
+  IDv <- modifyList(eval(formals()$ID.vars), ID.vars)
+  
+  if (IDv$ego %in% names(x$.alts[[1]]))
+    alts <- bind_rows(x$.alts, .id = "egoID")
+  else {
+    alts <- select(x, IDv$ego, .alts)
+    alts <- tidyr::unnest(alts, .alts)
+  }
+  
+  if (".aaties" %in% names(x)) {
+    if (IDv$ego %in% names(x$.aaties[[1]]))
+      aaties <- bind_rows(x$.aaties)
+    else {
+      aaties <- select(x, IDv$ego, .aaties)
+      aaties <- tidyr::unnest(aaties, .aaties)
+    }
+    egos <- select(x, -.alts, -.aaties)
+    egor(
+      alts,
+      egos,
+      aaties,
+      ID.vars = list(
+        ego = ".egoID",
+        alter = ".altID",
+        source = ".srcID",
+        target = ".tgtID"
+      )
+    )
+  } else {
+
+    egos <- select(x, -.alts)
+    egor(
+      alts,
+      egos,
+      ID.vars = list(
+        ego = ".egoID",
+        alter = ".altID",
+        source = ".srcID",
+        target = ".tgtID"
+      )
+    )
+  }
+}
 
 #' @method as_tibble egor
 #' @export
@@ -248,18 +321,21 @@ as_tibble.egor <- function(x,
                            ..., 
                            include.ego.vars = FALSE, 
                            include.alter.vars = FALSE){
-  res <- x[[attr(x, "active")]]
+  res <- as_tibble(x[[attr(x, "active")]])
   
   if (include.ego.vars & attr(x, "active") != "ego") {
     
-    names(x$ego)[names(x$ego) != ".egoID"] <- 
-      paste0(names(x$ego)[names(x$ego) != ".egoID"] , "_ego")
-    
-    
-    res <- full_join(res, x$ego,
-                     by = ".egoID")
+    if (has_ego_design(x)) {
+      names(x$ego$variables)[names(x$ego$variables) != ".egoID"] <-
+        paste0(names(x$ego$variables)[names(x$ego$variables) != ".egoID"] , "_ego")
+      res <- full_join(res, x$ego$variables, by = ".egoID")
+    }else{
+      names(x$ego)[names(x$ego) != ".egoID"] <-
+        paste0(names(x$ego)[names(x$ego) != ".egoID"] , "_ego")
+      res <- full_join(res, x$ego, by = ".egoID")
+    }
   }
-  
+
   if (include.alter.vars & attr(x, "active") == "aatie") {
     res <- left_join(res, 
                      x$alter, 
@@ -272,7 +348,3 @@ as_tibble.egor <- function(x,
   
   res
 }
-
-#' @method as.tibble egor
-#' @export
-as.tibble.egor <- as_tibble.egor

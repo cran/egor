@@ -58,6 +58,31 @@ test_that("as_network works.",
             )
           })
 
+test_that("as_network works with ego as tbl_svy",
+          {
+            data("egor32")
+            
+            expect_error(as_network(x = egor32), NA)
+            # alts = x$.alts[[1]]
+            # aaties = x$.aaties[[1]]
+
+            
+          })
+
+test_that("as_network works with graph.attrs",
+          {
+            e <- make_egor(3, 20)
+            
+            expect_error(res <- as_network(e, graph.attrs = c(".egoID", "income")
+                                          ), NA)
+            
+            expect_true(all(
+              c("income" , ".egoID") %in% 
+                network::list.network.attributes(res[[1]])
+            ))
+            
+          })
+
 test_that("as_igraph works.",
           {
             e <- make_egor(3, 22)
@@ -66,7 +91,7 @@ test_that("as_igraph works.",
             e$alter <- e$alter %>%
               mutate(weight = sample((1:3) / 3, nrow(.), replace = TRUE))
             
-            expect_error(as_igraph(
+            expect_error(igraph_list <- as_igraph(
               e,
               include.ego = T,
               ego.attrs = c("sex", "age"),
@@ -74,6 +99,37 @@ test_that("as_igraph works.",
             ),
             NA,
             label = "include.ego/ego.attrs/ego.alter.weights")
+            
+            expect_true("ego" %in% igraph::V(igraph_list[[1]])$name)
+            expect_false(any(is.na(igraph::V(igraph_list[[1]])$sex)))
+            
+            })
+
+test_that("as_igraph works with several graph attributes",
+          {
+            e <- make_egor(3, 22)
+            expect_error(igraph_list <-
+                           as_igraph(e,
+                                     graph.attrs = c(".egoID", 
+                                                     "income", 
+                                                     "age")),
+                         NA,
+                         label = "include.ego/ego.attrs/ego.alter.weights")
+            
+            expect_true(all(
+              igraph::list.graph.attributes(igraph_list[[1]]) == c(".egoID",
+                                                                   "income",
+                                                                   "age")
+            ))
+            
+          })
+
+test_that("as_igraph works with egor32.",
+          {
+            data("egor32")
+            res <- as_igraph(x = egor32)
+            expect_equal(length(res), 32)
+            expect_true(all(map_lgl(res, igraph::is.igraph)))
           })
 
 test_that("as_alters_df works.",

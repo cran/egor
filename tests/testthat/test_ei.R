@@ -1,5 +1,3 @@
-context("test_ei.R")
-
 test_that("EI() works.",
           {
             eigor <- make_egor(net.count = 6, max.alters = 20)

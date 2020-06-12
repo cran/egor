@@ -9,7 +9,8 @@ vis_clustered_graphs(
   node.size.multiplier = 1,
   node.min.size = 0,
   node.max.size = 200,
-  edge.width.multiplier = 30,
+  normalise.node.sizes = TRUE,
+  edge.width.multiplier = 1,
   center = 1,
   label.size = 0.8,
   labels = FALSE,
@@ -30,6 +31,9 @@ nodes}
 
 \item{node.max.size}{\code{Numeric} indicating maximum size of plotted
 nodes}
+
+\item{normalise.node.sizes}{\code{Logical.} If TRUE (default) node sizes
+are plotted using per network proportions rather than counts.}
 
 \item{edge.width.multiplier}{\code{Numeric} used to multiply the edge width.}
 
@@ -65,10 +69,11 @@ data("egor32")
 graphs <- clustered_graphs(egor32, "country") 
 
 # Visualise
-vis_clustered_graphs(graphs, 
-                     node.size.multiplier = 5, 
-                     edge.width.multiplier = 25,
-                     labels = TRUE)
+par(mfrow = c(2,3))
+vis_clustered_graphs(
+  graphs[1:5]
+)
+par(mfrow = c(1,1))
 }
 \references{
 Brandes, U., Lerner, J., Lubbers, M. J., McCarty, C., & Molina,

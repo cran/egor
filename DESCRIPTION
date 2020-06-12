@@ -1,8 +1,8 @@
 Package: egor
 Type: Package
 Title: Import and Analyse Ego-Centered Network Data
-Version: 0.20.03
-Date: 2020-03-02
+Version: 0.20.06
+Date: 2020-06-11
 Authors@R: c(
     person("Till", "Krenz", email = "egor@tillt.net",
     role = c("aut", "cre")),
@@ -27,16 +27,16 @@ Description: Tools for importing, analyzing and visualizing ego-centered
 URL: https://github.com/tilltnet/egor, https://tilltnet.github.io/egor/
 BugReports: https://github.com/tilltnet/egor/issues
 License: AGPL-3
-Depends: R (>= 2.10), dplyr, tibble
-Imports: tidygraph, igraph, network, shiny, survey, tidyr, methods,
+Depends: R (>= 3.5.0), dplyr, tibble
+Imports: tidygraph, igraph, network, shiny, srvyr, tidyr, methods,
         utils, purrr, rlang
-Suggests: knitr, testthat (>= 2.1.0), rmarkdown, haven
+Suggests: knitr, testthat (>= 2.1.0), rmarkdown, survey, haven
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 LazyData: true
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2020-03-02 20:58:43 UTC; tillkrenz
+Packaged: 2020-06-12 04:47:57 UTC; till
 Author: Till Krenz [aut, cre],
   Pavel N. Krivitsky [aut],
   Raffaele Vacca [aut],
@@ -46,4 +46,4 @@ Author: Till Krenz [aut, cre],
   Christopher McCarty [ctb]
 Maintainer: Till Krenz <egor@tillt.net>
 Repository: CRAN
-Date/Publication: 2020-03-03 00:20:02 UTC
+Date/Publication: 2020-06-12 09:10:27 UTC
