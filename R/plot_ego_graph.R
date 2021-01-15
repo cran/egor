@@ -8,9 +8,13 @@ plot_ego_graphs <- function(x,
                             vertex_color_var = NULL,
                             vertex_color_palette = "Heat Colors",
                             vertex_color_legend_label = vertex_color_var,
-                            vertex_label_var = NULL,
+                            vertex_label_var = "name",
                             edge_width_var = NULL,
+                            ego_alter_edge_width_var = 
+                              if(!is.null(edge_width_var) & include_ego) edge_width_var,
                             edge_color_var = NULL,
+                            ego_alter_edge_color_var = 
+                              if(!is.null(edge_color_var) & include_ego) edge_color_var,
                             edge_color_palette = "Heat Colors",
                             highlight_box_col_var = NULL,
                             highlight_box_col_palette = "Heat Colors",
@@ -25,7 +29,7 @@ plot_ego_graphs <- function(x,
   par(mfrow = c(y_dim, x_dim))
   for (i in ego_no:(ego_no + (x_dim * y_dim - 1))) {
     if (i <= nrow(x$ego)) {
-      boxi_color <- "white"
+      boxi_color <- "#ffffff00"
       if (!is.null(highlight_box_col_var)) {
         var_ <- factor(as_tibble(x$ego)[[highlight_box_col_var]])
         boxi_color <- egor_col_pal(highlight_box_col_palette,
@@ -40,7 +44,9 @@ plot_ego_graphs <- function(x,
         vertex_color_legend_label = vertex_color_legend_label,
         vertex_label_var = vertex_label_var,
         edge_width_var = edge_width_var,
+        ego_alter_edge_width_var = ego_alter_edge_width_var,
         edge_color_var = edge_color_var,
+        ego_alter_edge_color_var = ego_alter_edge_color_var,
         edge_color_palette = edge_color_palette,
         highlight_box_col = boxi_color,
         res_disp_vars = res_disp_vars,
@@ -61,9 +67,11 @@ plot_one_ego_graph <- function(x,
                                vertex_color_var = NULL,
                                vertex_color_palette = "Heat Colors",
                                vertex_color_legend_label = vertex_color_var,
-                               vertex_label_var = NULL,
+                               vertex_label_var = "name",
                                edge_width_var = NULL,
+                               ego_alter_edge_width_var = edge_width_var,
                                edge_color_var = NULL,
+                               ego_alter_edge_color_var = edge_color_var,
                                edge_color_palette = "Heat Colors",
                                highlight_box_col = "white",
                                res_disp_vars = NULL,
@@ -76,7 +84,11 @@ plot_one_ego_graph <- function(x,
   x <- 
     slice.egor(activate(x, "ego"), ego_no)
   
-  gr <- as_igraph(x, include.ego = include_ego)[[1]]
+  gr <- as_igraph(x, 
+                  include.ego = include_ego, 
+                  ego.alter.weights = c(ego_alter_edge_width_var,
+                                        ego_alter_edge_color_var)
+                  )[[1]]
   if (!sum(igraph::V(gr)) > 0) {
     # Plot Error message.
     plot(
@@ -149,14 +161,14 @@ plot_one_ego_graph <- function(x,
   } else {
     edge.color <- 1
   }
-  
-  # Label
+
+    # Label
   if (!is.null(vertex_label_var)) {
     vertex.label <-
       igraph::get.vertex.attribute(gr, vertex_label_var)
     vertex.label[is.na(vertex.label)] <- 0
   } else {
-    vertex.label <- igraph::V(gr)
+    vertex.label <- ""
   }
   
   par(mar = c(0.5, 0.5, 0.5, 0.5))
@@ -170,7 +182,6 @@ plot_one_ego_graph <- function(x,
   } else {
     layout_ <- layout
   }
-  
   
   set.seed(1337)
   #' @importFrom igraph plot.igraph

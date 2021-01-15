@@ -97,7 +97,7 @@ bind_IDs_if_missing <- function(.data, result) {
 tibble_egos <- function(.data) {
   if (attr(.data, "active") == "ego" && has_ego_design(.data)) {
     .data[["ego"]] <-
-      cbind(.data[["ego"]][["variables"]], .rowID_for_design = seq_len(nrow(.data[["ego"]])))
+      bind_cols(.data[["ego"]][["variables"]], .rowID_for_design = seq_len(nrow(.data[["ego"]])))
   }
   .data
 }
@@ -971,7 +971,7 @@ explain.egor <- function(x, ...) {
 #' @noRd
 #' @method pull egor
 pull.egor <- function(.data, var = -1, name = NULL, ...) {
-  pull(.data[[attr(.data, "active")]], var = var, name = name, ...)
+  pull(.data[[attr(.data, "active")]], var = !!enquo(var), ...) 
 }
 
 # rowwise -----------------------------------------------------------------
@@ -1092,17 +1092,4 @@ setequal.egor <- function(x, y, ...) {
   result <- setequal(x[[attr(x, "active")]], y, ...)
   result <- bind_IDs_if_missing(x, result)
   return_egor_with_result(x, result)
-}
-
-#' @noRd
-#' @importFrom srvyr as_survey
-#' @export
-as_survey.egor <- function(.data, ...) {
-  .data$ego
-}
-
-#' @noRd
-#' @export
-as_survey_design.egor <- function(.data, ...) {
-  .data$ego
 }

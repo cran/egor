@@ -1,3 +1,5 @@
+if (getRversion() >= "2.15.1") utils::globalVariables(c("alterID", "egoID", ".tmp.srcID", ".tmp.tgtID"))
+
 # Read ego-centered-network data from single file format or two-file format.
 
 #' Obtain the index of a column in a data frame (or a list), producing
@@ -86,7 +88,7 @@ wide.to.long <-
     
     # Wenn var.wise max.alters, statt alters.item.count nehmen!!! #!#
     for (i in 1:dim(name_mt)[1]) {
-      vary[[i]] <- name_mt[i, ]
+      vary[[i]] <- name_mt[i,]
       vn <- c(vn, common_prefix(vary[[i]]))
     }
     
@@ -115,8 +117,8 @@ wide.to.long <-
     egoID_idx <- col_idx(egoID, long)
     alterID_idx <- col_idx("alterID", long)
     long <-
-      cbind(egoID = long[egoID], alterID = long["alterID"], long[, -c(egoID_idx, alterID_idx)])
-    long <- long[order(long[[egoID]], long$alterID),]
+      cbind(egoID = long[egoID], alterID = long["alterID"], long[,-c(egoID_idx, alterID_idx)])
+    long <- long[order(long[[egoID]], long$alterID), ]
     
     ### Return:
     long
@@ -200,7 +202,8 @@ wide.dyads.to.edgelist <- function(e.wide,
           weight = alter.alter[case, count.var][[1]],
           stringsAsFactors = FALSE
         )
-        alter.alter.df <- rbind(alter.alter.df, this.alter.alter, stringsAsFactors = FALSE)
+        alter.alter.df <-
+          rbind(alter.alter.df, this.alter.alter, stringsAsFactors = FALSE)
         count.var <- count.var + 1
         #' @importFrom stats na.omit
         alter.alter.df <- na.omit(alter.alter.df)
@@ -282,7 +285,7 @@ wide.dyads.to.edgelist.regex <-
     
     col.df.list <- mapply(function(e, n) {
       e <- e[-col_idx('.egoRow', e)]
-      e <- e[e$.tmp.srcID <= n & e$.tmp.tgtID <= n,]
+      e <- e[e$.tmp.srcID <= n & e$.tmp.tgtID <= n, ]
     }, col.df.list, netsize, SIMPLIFY = FALSE)
   }
 
@@ -310,18 +313,18 @@ wide.dyads.to.edgelist.regex <-
 #' Study Ego-Centered Networks. Bulletin de Methodologie Sociologique,
 #' 64(1), 83-100.
 #' @keywords import
-#' @examples 
+#' @examples
 #' path_to_one_file_8 <- system.file("extdata", "one_file_8.csv", package = "egor")
 #' egos_8 <- read.csv2(path_to_one_file_8, row.names = 1)
-#' 
+#'
 #' attr.start.col <- which(names(egos_8) == "alter.sex.1")
 #' attr.end.col <- which(names(egos_8) == "alter.age.8")
 #' dy.first.var <- which(names(egos_8) == "X1.to.2")
-#' 
+#'
 #' onefile_to_egor(
-#'   egos = egos_8, netsize = egos_8$netsize, 
-#'   attr.start.col = attr.start.col, 
-#'   attr.end.col = attr.end.col, 
+#'   egos = egos_8, netsize = egos_8$netsize,
+#'   attr.start.col = attr.start.col,
+#'   attr.end.col = attr.end.col,
 #'   aa.first.var = dy.first.var,
 #'   max.alters = 8)
 #' @export
@@ -348,7 +351,7 @@ onefile_to_egor <-
     
     #Sort egos by egoID.
     cat("Sorting data by egoID: ")
-    egos <- egos[order(as.numeric(egos[[IDv$ego]])),]
+    egos <- egos[order(as.numeric(egos[[IDv$ego]])), ]
     message("Done.")
     
     cat("Transforming alters data to long format: ")
@@ -373,7 +376,7 @@ onefile_to_egor <-
                                    netsize = netsize)
     }
     message("Done.")
-    message("Note: Make sure to filter out edges with invalid weight values.")
+    message("Note: Make sure to filter out alter-alter ties with invalid weight values.")
     
     elist <-
       purrr::map2_dfr(egos[[IDv$ego]], e.lists, function(ego_id, edges)
@@ -384,8 +387,8 @@ onefile_to_egor <-
           edges
         }
       })
+
     # Filter out alters by network size
-    
     if (!is.null(netsize)) {
       cat("Filtering out empty alter entries using provided network size values: ")
       a <- c(1, cumsum(rep(max.alters, nrow(egos))) + 1)
@@ -394,19 +397,40 @@ onefile_to_egor <-
                        netsize, ~ if ((!is.na(.y)) &
                                       .y != 0)
                          seq(.x, .y + .x - 1)) %>% unlist()
-      alters.df <- alters.df[c,]
+      alters.df <- alters.df[c, ]
       message("Done.")
     } else {
       warning("No netsize values provided, make sure to filter out invalid alter entries.")
     }
     
+    # Filter out aaties for egos with no alters
+    
+    elist <- 
+      filter(elist, !!rlang::sym(IDv$ego) %in% unique(alters.df[[IDv$ego]]))
+    
+    # Filter out aaties that reference non-existing alters
+    
+    alters.df[[IDv$ego]] <- factor(alters.df[[IDv$ego]])
+    elist[[IDv$ego]] <- factor(elist[[IDv$ego]], levels = levels(alters.df[[IDv$ego]]))
+
+    if (!is.null(netsize)) {
+      elist <- 
+        purrr::map2_dfr(split(alters.df, alters.df[IDv$ego]),
+                    split(elist, elist[IDv$ego]),
+                    function(alt, aa) {
+                      aa <- filter(aa, .tmp.srcID %in% alt$alterID)
+                      filter(aa, .tmp.tgtID %in% alt$alterID)
+                    })
+    }
+    
     # Return:
     egor(
-      alters.df,
-      egos[-c(attr.start.col:attr.end.col, aa.first.var:aa.last.var)],
-      elist,
+      alters = alters.df,
+      egos = egos[-c(attr.start.col:attr.end.col, aa.first.var:aa.last.var)],
+      aaties = elist,
       ID.vars = list(
         ego = IDv$ego,
+        alterID = "alterID",
         source = ".tmp.srcID",
         target = ".tmp.tgtID"
       ),
@@ -431,16 +455,16 @@ onefile_to_egor <-
 #' @param ... additional arguments to [egor()].
 #' @template return_egoR
 #' @keywords import
-#' @examples 
+#' @examples
 #' path_to_alters_8.csv <- system.file("extdata", "alters_8.csv", package = "egor")
 #' path_to_one_file_8 <- system.file("extdata", "one_file_8.csv", package = "egor")
-#' 
+#'
 #' # read data from disk
 #' egos_8 <- read.csv2(path_to_one_file_8, row.names = 1)
 #' alters_8 <- read.csv2(path_to_alters_8.csv, row.names = 1)
-#' 
+#'
 #' dy.first.var <- which(names(egos_8) == "X1.to.2")
-#' 
+#'
 #' # convert to egor object
 #'   twofiles_to_egor(
 #'     egos = egos_8,
@@ -472,16 +496,16 @@ twofiles_to_egor <- function(egos,
       ". Generating alter ID."
     ))
     
-    alters <- alters[order(alters[[IDv$ego]]),]
+    alters <- alters[order(alters[[IDv$ego]]), ]
     alters[[IDv$alter]] <-
       unlist(map(rle(alters[[IDv$ego]])$lengths, ~ 1:.))
   }
   
   # Sort egos by egoID and alters by egoID and alterID.
   message("Sorting data by egoID and alterID.")
-  egos <- egos[order(egos[[IDv$ego]]),]
+  egos <- egos[order(egos[[IDv$ego]]), ]
   alters <-
-    alters[order(alters[[IDv$ego]], alters[[IDv$alter]]),]
+    alters[order(alters[[IDv$ego]], alters[[IDv$alter]]), ]
   
   message("Transforming wide edge data to edgelist.")
   elist <-
@@ -503,6 +527,16 @@ twofiles_to_egor <- function(egos,
       }
     })
   
+  # Check and ensure that tgt/src and .altID are same class
+  elist_alters <-
+    harmonize_id_var_classes(elist,
+                             alters,
+                             c(".tmp.tgtID", ".tmp.srcID"),
+                             "alterID")
+  
+  elist <- elist_alters$df1
+  alters <- elist_alters$df2
+  
   # Return:
   egor(
     alters,
@@ -517,3 +551,31 @@ twofiles_to_egor <- function(egos,
     ...
   )
 }
+
+
+# convert to highest class that still captures everything,
+# character is lowest (lcc least common class)
+create_as_lcc <-
+  function(x) {
+    classes <- unique(purrr::map_chr(x, function(x)
+      is.double(x)))
+    if (length(classes) == 1) {
+      return(function(x)
+        x)
+    } else if (any(!purrr::map_lgl(x, is.numeric))) {
+      return(as.character)
+    } else {
+      return(as.numeric)
+    }
+  }
+
+harmonize_id_var_classes <-
+  function(df1, df2, var_names1, var_names2) {
+    a <- purrr::map2(list(df1, df2),
+              list(var_names1, var_names2),
+              ~ purrr::map(.y, function(z)
+                .x[[z]]))
+    as_lcc <- create_as_lcc(unlist(a, recursive = FALSE))
+    list(df1 = mutate(df1, across(all_of(var_names1), as_lcc)),
+         df2 = mutate(df2, across(all_of(var_names2), as_lcc)))
+  }

@@ -9,6 +9,7 @@ test_that(
                      alterID = rep(1:4, 4),
                      fav_color = sample(c("red", "green", "blue"), 16, replace = TRUE))
     expect_error(egor(alters), NA)
+    expect_equal(ncol(egor(alters)$aatie), 3)
   }
 )
 
@@ -24,8 +25,6 @@ test_that(
     expect_error(egor(alters, egos), NA)
   }
 )
-
-
 
 # alters+aaties
 
@@ -47,9 +46,9 @@ test_that(
 test_that(
   "egor() works when all three levels are provided",
   {
-    alters <- tibble(egoID = gl(4,4), 
-                     alterID = rep(1:4, 4),
-                     fav_color = sample(c("red", "green", "blue"), 16, replace = TRUE))
+    alters <- tibble(egoID = as.numeric(gl(5,4)), 
+                     alterID = rep(1:4, 5),
+                     fav_color = sample(c("red", "green", "blue"), 20, replace = TRUE))
     aaties <- tibble(egoID = sample(1:5, 32, replace = TRUE),
                      Source = sample(1:4, 32, replace = TRUE),
                      Target = sample(1:4, 32, replace = TRUE))
@@ -97,9 +96,9 @@ test_that(
 test_that(
   "egor() works with missing alters/ aaties / egos.",
   {
-    alters <- tibble(egoID = gl(3,4), 
-                     alterID = rep(1:3, 4),
-                     fav_color = sample(c("red", "green", "blue"), 12, replace = TRUE))
+    alters <- tibble(egoID = as.numeric(gl(4,4)), 
+                     alterID = rep(1:4, 4),
+                     fav_color = as.character(sample(c("red", "green", "blue"), 16, replace = TRUE)))
     aaties <- tibble(egoID = sample(1:3, 32, replace = TRUE),
                      Source = sample(1:4, 32, replace = TRUE),
                      Target = sample(1:4, 32, replace = TRUE))
@@ -109,17 +108,13 @@ test_that(
     expect_error(egor(alters,
                       egos, 
                       aaties), NA)
-    expect_warning(egor(alters,
-                        egos, 
-                        aaties), NA)
-    
+
     expect_error(summary(egor(alters, egos, aaties)), NA)
   }
 )
 
-
 test_that(
-  "egor(): Non-Unique egoID in ego data should raise an error.",
+  "egor(): Non-Unique egoID in ego data raises an error.",
   {
     alters <- tibble(egoID = gl(3,4), 
                      alterID = rep(1:3, 4),
@@ -136,9 +131,8 @@ test_that(
   }
 )
 
-
 test_that(
-  "egor(): Alters without egos should raise an error.",
+  "egor(): Alters without egos raises an error.",
   {
     alters <- tibble(egoID = gl(3,4), 
                      alterID = rep(1:3, 4),
@@ -152,17 +146,33 @@ test_that(
     expect_error(egor(alters,
                       egos, 
                       aaties),
-                 "There is at least one ego ID in the alter data with no corresponding entry in the ego data.")
+                 "There is at least one ego ID in the `alter` data with no corresponding entry in the `ego` data.")
   }
 )
 
-# What of Input is dataframes? (NOT tibbles)
-
+test_that(
+  "egor(): `aaties` including alters that are not in `alters` raises an error.",
+  {
+    alters <- tibble(egoID = as.numeric(gl(3,4)), 
+                     alterID = rep(1:4, 3),
+                     fav_color = sample(c("red", "green", "blue"), 12, replace = TRUE))
+    aaties <- tibble(egoID = 1,
+                     Source = c(1,2,3,4,5),
+                     Target = c(5,2,3,5,2))
+    egos <- tibble(egoID = 1:4)
+    
+    expect_error(egor(alters = alters,
+            egos = egos, 
+         aaties = aaties))
+    
+  }
+  
+  )
 
 test_that(
   "egor(): can process dataframes that are not tibbles.",
   {
-    alters <- tibble(egoID = gl(4,4), 
+    alters <- tibble(egoID = as.numeric(gl(4,4)), 
                      alterID = rep(1:4, 4),
                      fav_color = sample(c("red", "green", "blue"), 16, replace = TRUE))
     aaties <- tibble(egoID = sample(1:3, 32, replace = TRUE),
@@ -196,13 +206,14 @@ test_that(
                       aaties_df), NA)
     
     expect_warning(summary(egor(alters_df, egos_df, aaties_df)), NA)
+  
   }
 )
 
 
 
 test_that(
-  "egor() can handle ID columns that match the canonical without errors but stops otherwise.",
+  "egor() can handle ID columns that match the reserved column names without errors but stops otherwise.",
   {
     e <- make_egor(32, 20)
 
@@ -226,7 +237,7 @@ test_that(
 
 
 test_that(
-  "egor() only requires alterID if aaties present.",
+  "egor() requires alterID if aaties present.",
   {
     e <- make_egor(32, 20)
 
@@ -239,19 +250,22 @@ test_that(
     names(alters)[1] <- "egoID"
     names(aaties)[1:3] <- c("egoID", "Source", "Target")
 
-    expect_error(egor(alters, egos, aaties), class = "vctrs_error_subscript_oob")
+    expect_error(egor(alters = alters, egos = egos, aaties = aaties), class = "vctrs_error_subscript_oob")
     expect_warning(egor(alters, egos), NA)
   }
 )
 
 test_that(
-  "ego_design works works with probs",
+  "ego_design works with probabilities",
   {
     data("alters32")
     data("aaties32")
     data("egos32")
     egos32$prbs <- rep(c(0.3, 0.5), 16)
-    res <- egor(alters32,
+    
+    options(egor.results_with_design = TRUE)
+    res <- 
+      egor(alters32,
          egos32,
          aaties32,
          ID.vars = list(ego = ".EGOID",
@@ -265,12 +279,13 @@ test_that(
     }
 )
 
-test_that("egor() works works with probs design",
+test_that("egor() works works with probabilities design",
           {
             data("alters32")
             data("aaties32")
             data("egos32")
             egos32$prbs <- rep(c(0.3, 0.5), 16)
+            options(egor.results_with_design = TRUE)
             expect_error({
               res <- egor(
                 alters32,
@@ -285,6 +300,7 @@ test_that("egor() works works with probs design",
                 ego_design = list(probs = "prbs")
               )
             }, NA)
+            
             expect_is(res$ego, "tbl_svy")
             expect_true(has_ego_design(res))
           })
@@ -297,6 +313,7 @@ test_that("egor() works works with 2-level cluster design",
             data("egos32")
             egos32$clstr1 <- gl(4, 8)
             egos32$clstr2 <- gl(16, 2)
+            options(egor.results_with_design = TRUE)
             expect_error({
               res <- egor(
                 alters32,

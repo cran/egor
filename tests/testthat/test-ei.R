@@ -66,6 +66,27 @@ test_that("EI() works.",
                          NA, label = "Missing aaties.")
           })
 
+test_that("EI() works with include.ego",
+          {
+            eigor <- make_egor(net.count = 6, max.alters = 20)
+            
+            expect_error({
+              EI(object = eigor, alt.attr = "age")
+              EI(object = eigor,
+                 alt.attr = "age",
+                 include.ego = TRUE)
+            }, NA)
+          })
+
+test_that("EI() works rescale TRUE/FALSE",
+          {
+            eigor <- make_egor(net.count = 6, max.alters = 20)
+            expect_error({
+            EI(object = eigor, alt.attr = "age", rescale = FALSE)
+            EI(object = eigor, alt.attr = "age")
+            }, NA)
+          })
+
 test_that("comp_ei handles extreme values (only one group in alts) correctly",
           {
             egor32 <- make_egor(32, 10)
@@ -92,7 +113,7 @@ test_that("comp_ei handles extreme values (only one group in alts) correctly",
             
             expect_true(all(abs(comp_ei(object = egor32,
                                         alt.attr = "sex", 
-                                        ego.attr = "sex")$result[1:3]) == 1))
+                                        ego.attr = "sex")$ei[1:3]) == 1))
           })
 
 test_that("comp_ei handles character vectors correctly",
@@ -111,3 +132,31 @@ test_that("comp_ei handles character vectors correctly",
             
           })
 
+test_that("EI() ungroups data first", {
+  eigor <- make_egor(net.count = 6, max.alters = 20)
+  expect_error(eigor %>% 
+    activate(aatie) %>% 
+    group_by(.egoID) %>% 
+    EI(alt.attr = "age"), NA)
+  })
+
+test_that("EI() returns tbl_svy object, when ego_design present", {
+  x <- make_egor(5, 32)
+  
+  x$ego$sampling_weight <-
+    sample(1:10 / 10, 5, replace = TRUE)
+  ego_design(x) <- list(weight = "sampling_weight")
+  
+  options(egor.results_with_design = TRUE)
+  res <- EI(object = x, alt.attr =  "sex")
+  expect_is(res, "tbl_svy")
+})
+
+
+test_that("EI() ungroups data first", {
+  data("egor32")
+  expect_error(egor32 %>% 
+                 activate(aatie) %>% 
+                 group_by(.egoID) %>% 
+                 EI(alt.attr = "age"), NA)
+})

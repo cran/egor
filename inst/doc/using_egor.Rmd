@@ -13,8 +13,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  dev.args = list(type = "cairo")
-)
+  dev.args = list(type = if(capabilities('cairo')) "cairo" else "png"))
 
 library(knitr)
 library(egor)
@@ -22,7 +21,7 @@ library(egor)
 
 ## The `egor` Package
 
-egor provides
+`egor` provides
 
 - import functions
 - egor object organizes ego-centered network, allowing for a smooth workflow

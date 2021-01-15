@@ -1,6 +1,6 @@
 context("test-plot_egor.R")
 
-pdf(NULL) # This ensures that no PDF file is gernerated when running tests automatically.
+pdf(NULL) # This ensures that no PDF file is generated when running tests automatically.
 
 # These tests are mostly here to notify when, other parts of the package break
 # the plotting facilities. They are not about the correctness of the plots.
@@ -21,7 +21,7 @@ test_that("plot plots egor objects", {
       edge_width_var = "weight",
       edge_color_var = "weight",
       edge_color_palette = "Greys",
-      highlight_box_col_var = "blue",
+      highlight_box_col_var = "sex",
       res_disp_vars  = c("sex", "age")
     )
     
@@ -257,5 +257,89 @@ test_that("plot_ego_gram works without pie_var/venn_var", {
                   edge_zoom = 3)
   })
 })
+
+test_that("plot_ego_gram plots empty levels of a factor variables for pies and venns", {
+  # This is meant more as a manual test. Plots should appear immediately.
+  expect_error({
+    e <- make_egor(50, 12)
+    e <- e %>% 
+      activate(alter) %>% 
+      mutate(age2 = as.character(age),
+             rating = sample(1:5, n(), replace = TRUE))
+    e <- 
+      e %>% 
+      mutate(rating.f = factor(rating, levels = 1:5))
+    plot_egograms(e,
+                  ego_no = 4,
+                  venn_var = "rating",
+                  pie_var = "age2", 
+                  vertex_color_var = "sex",
+                  edge_color_var = "weight",
+                  edge_width_var = "weight", 
+                  edge_zoom = 3,
+                  venn_gradient_reverse = FALSE)
+    
+    plot_egograms(e,
+                  ego_no = 1,
+                  venn_var = "rating",
+                  pie_var = "sex", 
+                  vertex_color_var = "sex",
+                  edge_color_var = "weight",
+                  edge_width_var = "weight", 
+                  edge_zoom = 3, 
+                  #highlight_box_col_var = "country"
+                  )
+    
+    plot_egograms(e,
+                  ego_no = 1,
+                  venn_var = "rating",
+                  pie_var = "sex", 
+                  vertex_color_var = "sex",
+                  edge_color_var = "weight",
+                  edge_width_var = "weight", 
+                  edge_zoom = 3, 
+                  vertex_label_var = NULL
+                  #highlight_box_col_var = "country"
+    )
+    
+  }, NA)
+  layout_egogram(e$alter$.altID, e$alter$age, e$alter$rating.f)
+  expect_warning({
+    plot_egograms(e,
+                  ego_no = 1,
+                  venn_var = NULL,
+                  pie_var = NULL, 
+                  vertex_color_var = "sex",
+                  edge_color_var = "weight",
+                  edge_width_var = "weight", 
+                  edge_zoom = 3)
+  })
+})
+
+test_that("ego-alter weights are plotted",
+          {
+            e <- make_egor(5, 12)
+            e$alter$weight <- sample(1:5/5, nrow(e$alter), replace = TRUE)
+            expect_error({
+              plot_ego_graphs(e, include_ego = TRUE)
+              plot_ego_graphs(e, edge_width_var = "weight", include_ego = TRUE)
+               }, NA)
+            expect_error({
+              plot_ego_graphs(e, include_ego = TRUE)
+              plot_ego_graphs(e, edge_color_var = "weight", include_ego = TRUE)
+            }, NA)
+            })
+
+test_that("egograms with many venns produce adequatly sized nodes",
+          {
+            data("transnat")
+            transnat <- 
+              transnat %>% 
+              activate(alter) %>% 
+              mutate(test_var = sample(1:12, nrow(.$alter), replace = TRUE))
+            expect_error(
+              plot_egograms(transnat, venn_var = "test_var", pie_var = "sex", vertex_zoom = 1, vertex_label_var = NULL),
+              NA)
+          })
 
 dev.off() # Closing the NULL pdf device.

@@ -19,7 +19,7 @@ plot_egograms(
   vertex_color_var = NULL,
   vertex_color_palette = "Heat Colors",
   vertex_color_legend_label = vertex_color_var,
-  vertex_label_var = NULL,
+  vertex_label_var = "name",
   edge_width_var = NULL,
   edge_color_var = NULL,
   edge_color_palette = "Heat Colors",
@@ -30,6 +30,7 @@ plot_egograms(
   edge_zoom = 2,
   font_size = 1,
   venn_colors = NULL,
+  venn_gradient_reverse = FALSE,
   show_venn_labels = TRUE,
   ...
 )
@@ -43,9 +44,11 @@ plot_ego_graphs(
   vertex_color_var = NULL,
   vertex_color_palette = "Heat Colors",
   vertex_color_legend_label = vertex_color_var,
-  vertex_label_var = NULL,
+  vertex_label_var = "name",
   edge_width_var = NULL,
+  ego_alter_edge_width_var = if (!is.null(edge_width_var) & include_ego) edge_width_var,
   edge_color_var = NULL,
+  ego_alter_edge_color_var = if (!is.null(edge_color_var) & include_ego) edge_color_var,
   edge_color_palette = "Heat Colors",
   highlight_box_col_var = NULL,
   highlight_box_col_palette = "Heat Colors",
@@ -81,27 +84,27 @@ plot_egor(
 
 \item{pie_var}{Name (character) of alter column.}
 
-\item{vertex_size_var}{Name (\strong{character}) of alter column.}
+\item{vertex_size_var}{Name (\code{character}) of alter column.}
 
-\item{vertex_color_var}{Name (\strong{character}) of alter column.}
+\item{vertex_color_var}{Name (\code{character}) of alter column.}
 
-\item{vertex_color_palette}{Name (\strong{character}) of color palette.}
+\item{vertex_color_palette}{Name (\code{character}) of color palette, see details for available color palettes.}
 
 \item{vertex_color_legend_label}{Character.}
 
-\item{vertex_label_var}{Name (\strong{character}) of alter column.}
+\item{vertex_label_var}{Name (\code{character}) of alter column. Set this to \code{NULL} to suppress labels.}
 
-\item{edge_width_var}{Name (\strong{character}) of aatie column.}
+\item{edge_width_var}{Name (\code{character}) of aatie column.}
 
-\item{edge_color_var}{Name (\strong{character}) of aatie column.}
+\item{edge_color_var}{Name (\code{character}) of aatie column.}
 
-\item{edge_color_palette}{Name (\strong{character}) of color palette.}
+\item{edge_color_palette}{Name (\code{character}) of color palette, see details for available color palettes.}
 
-\item{highlight_box_col_var}{Name (\strong{character}) of ego column.}
+\item{highlight_box_col_var}{Name (\code{character}) of ego column.}
 
-\item{highlight_box_col_palette}{Name (\strong{character}) of color palette.}
+\item{highlight_box_col_palette}{Name (\code{character}) of color palette, see details for available color palettes.}
 
-\item{res_disp_vars}{Name (\strong{character}) of ego column.}
+\item{res_disp_vars}{Name (\code{character}) of ego column.}
 
 \item{vertex_zoom}{Numeric.}
 
@@ -109,11 +112,19 @@ plot_egor(
 
 \item{font_size}{Numeric.}
 
-\item{venn_colors}{Vector of colors.}
+\item{venn_colors}{\code{Character} vector of colors to be used for coloring the
+subsections of the circle.}
+
+\item{venn_gradient_reverse}{\code{Logical}, set to TRUE in order to have the color intensity
+of venns increase going from the inner circles to the outer circles.}
 
 \item{show_venn_labels}{Logical.}
 
 \item{...}{Additional arguments forwared to plot.igraph.}
+
+\item{ego_alter_edge_width_var}{Name (\code{character}) of alter column.}
+
+\item{ego_alter_edge_color_var}{Name (\code{character}) of alter column.}
 
 \item{include_ego}{Logical.}
 
@@ -124,7 +135,22 @@ plot_egor(
 default networks of the four first egos are plotted.
 }
 \details{
-For type eqals "egograph" ego networks are plotted using
+For type eqals "egograph" ego networks are plotted with \code{igraph}'s
+plotting engine. "egogram" uses a special layout that places the nodes
+on a map of (1) concentric circles with (2) subsections, that can be mapped to
+alter variables.
+
+Available color palettes are:
+\itemize{
+\item Heat Colors
+\item Yellow-Green
+\item Red-Yellow
+\item Blue-Red
+\item Black-White
+\item Greys
+\item Rainbow
+\item Topo Colors
+}
 }
 \section{Functions}{
 \itemize{

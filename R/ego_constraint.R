@@ -28,13 +28,17 @@ ego_constraint <-
                 include.ego = TRUE,
                 ego.alter.weights = ego.alter.weights)
     
-    map_dbl(graphs,
+    res <- purrr::map_dbl(graphs,
             ~ igraph::constraint(
               .,
               weights = if (is.null(weights))
-                rep(1, length(E(.)))
+                rep(1, length(igraph::E(.)))
               else
                 get.edge.attribute(., weights),
-              nodes = V(.)[V(.)$name == "ego"]
+              nodes = igraph::V(.)[igraph::V(.)$name == "ego"]
             ))
+    if(has_ego_design(object)) 
+      res <- tibble(.egoID = object$ego$variables$.egoID, constraint = res)
+    else res <- tibble(.egoID = object$ego$.egoID, constraint = res)
+    return_results(object, res)
   }
