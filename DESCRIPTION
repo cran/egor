@@ -1,8 +1,8 @@
 Package: egor
 Type: Package
 Title: Import and Analyse Ego-Centered Network Data
-Version: 0.21.02
-Date: 2021-02-11
+Version: 1.21.6
+Date: 2021-06-10
 Authors@R: c(
     person("Till", "Krenz", email = "egor@tillt.net",
     role = c("aut", "cre")),
@@ -39,7 +39,7 @@ RoxygenNote: 7.1.1
 LazyData: true
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2021-02-11 17:57:14 UTC; till
+Packaged: 2021-06-11 16:50:22 UTC; till
 Author: Till Krenz [aut, cre],
   Pavel N. Krivitsky [aut],
   Raffaele Vacca [aut],
@@ -49,4 +49,4 @@ Author: Till Krenz [aut, cre],
   Christopher McCarty [ctb]
 Maintainer: Till Krenz <egor@tillt.net>
 Repository: CRAN
-Date/Publication: 2021-02-12 14:20:02 UTC
+Date/Publication: 2021-06-11 21:00:02 UTC

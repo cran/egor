@@ -29,9 +29,10 @@ plot_egograms(
   vertex_zoom = 1,
   edge_zoom = 2,
   font_size = 1,
-  venn_colors = NULL,
+  pie_colors = NULL,
   venn_gradient_reverse = FALSE,
   show_venn_labels = TRUE,
+  include_ego = FALSE,
   ...
 )
 
@@ -112,7 +113,7 @@ plot_egor(
 
 \item{font_size}{Numeric.}
 
-\item{venn_colors}{\code{Character} vector of colors to be used for coloring the
+\item{pie_colors}{\code{Character} vector of colors to be used for coloring the
 subsections of the circle.}
 
 \item{venn_gradient_reverse}{\code{Logical}, set to TRUE in order to have the color intensity
@@ -120,13 +121,13 @@ of venns increase going from the inner circles to the outer circles.}
 
 \item{show_venn_labels}{Logical.}
 
+\item{include_ego}{Logical.}
+
 \item{...}{Additional arguments forwared to plot.igraph.}
 
 \item{ego_alter_edge_width_var}{Name (\code{character}) of alter column.}
 
 \item{ego_alter_edge_color_var}{Name (\code{character}) of alter column.}
-
-\item{include_ego}{Logical.}
 
 \item{type}{Character. Either "egograph" or "egogram".}
 }

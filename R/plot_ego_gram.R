@@ -1,5 +1,5 @@
 if (getRversion() >= "2.15.1")
-  utils::globalVariables(c(".egoID"))
+  utils::globalVariables(c(".egoID", "alter"))
 
 calc_angle_coordinates <- function(radius, angle) {
   X <- radius * sin(angle)
@@ -110,13 +110,16 @@ plot_egograms <- function(x,
                           vertex_zoom = 1,
                           edge_zoom = 2,
                           font_size = 1,
-                          venn_colors = NULL,
+                          pie_colors = NULL,
                           venn_gradient_reverse = FALSE,
                           show_venn_labels = TRUE,
+                          include_ego = FALSE,
                           ...) {
   opar <- par(no.readonly = TRUE)
   on.exit(par(opar))
   par(mfrow = c(y_dim, x_dim))
+  
+  x <- activate(x, alter) %>% arrange(.egoID, .altID)
   
   for (i in ego_no:(ego_no + (x_dim * y_dim - 1))) {
     if (i <= nrow(x$ego)) {
@@ -143,10 +146,11 @@ plot_egograms <- function(x,
         res_disp_vars = res_disp_vars,
         vertex_zoom = vertex_zoom,
         edge_zoom = edge_zoom,
-        venn_colors = venn_colors,
+        pie_colors = pie_colors,
         venn_gradient_reverse = venn_gradient_reverse,
         font_size = font_size,
         show_venn_labels = show_venn_labels,
+        include_ego = include_ego,
         ...
       )
     }
@@ -172,9 +176,10 @@ plot_egogram <-
            vertex_zoom = 1,
            edge_zoom = 2,
            font_size = 1,
-           venn_colors = NULL,
+           pie_colors = NULL,
            venn_gradient_reverse = FALSE,
            show_venn_labels = TRUE,
+           include_ego = FALSE,
            ...)  {
     
     if (!any(c(!is.null(pie_var), !is.null(venn_var))))
@@ -232,7 +237,7 @@ plot_egogram <-
       clockwise = TRUE,
       border = FALSE,
       add = TRUE,
-      col = venn_colors
+      col = pie_colors
     )
     
     # Venns
@@ -319,8 +324,17 @@ plot_egogram <-
     vertex_zoom <- (((venn_n+5)^2-1)/(venn_n+5)^3) * 100 - 20 + vertex_zoom 
 
     # Create igraph
-    g <- as_igraph(ego_object)
+    g <- as_igraph(ego_object, include.ego = include_ego)[[1]]
     
+    if(include_ego) {
+      # Place ego in middle of plot
+      lay <- rbind(lay, c(0, 0))
+      # Set curvature of ego-alter ties to zero
+      igraph::E(g)$curved[is.na(igraph::E(g)$curved)] <- 0
+      # Set ego-alter weights to a dummy value
+      igraph::E(g)$weight[is.na(igraph::E(g)$weight)] <- min(igraph::E(g)$weight, na.rm = TRUE)
+    }
+        
     # Plot
     plot_one_ego_graph(
       ego_object,
@@ -341,10 +355,8 @@ plot_egogram <-
       vertex_zoom = vertex_zoom,
       edge_zoom = edge_zoom,
       vertex.frame.color = NA,
-      edge.curved = igraph::E(g[[1]])$curved,
-      #edge.width = 2,
-      #edge.color = "gray69",
-      #rgb(0,0,0,0.2),
+      edge.curved = igraph::E(g)$curved,
+      include_ego = include_ego,
       ...
     )
   }
