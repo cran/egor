@@ -12,7 +12,7 @@
 
 <meta name="author" content="Till Krenz" />
 
-<meta name="date" content="2021-07-01" />
+<meta name="date" content="2021-10-07" />
 
 <title>Using egor to analyse ego-centered network data</title>
 
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Using <code>egor</code> to analyse ego-centered network data</h1>
 <h4 class="author">Till Krenz</h4>
-<h4 class="date">2021-07-01</h4>
+<h4 class="date">2021-10-07</h4>
 
 
 
@@ -354,7 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">source =</span> <span class="st">&quot;.SRCID&quot;</span>,</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">target =</span> <span class="st">&quot;.TGTID&quot;</span>))</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>e1</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data ([32mactive[39m): 32 x 6</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data ([32mactive[39m): 32 × 6</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID sex   age     age.years country   income</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;       &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      w     36 - 45        45 USA        36135</span></span>
@@ -362,13 +362,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3      m     26 - 35        28 Australia  63875</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 4      w     0 - 17          2 USA        31755</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 5      m     56 - 65        56 Germany    14600</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 478 x 7</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 478 × 7</span></span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .altID .egoID sex   age      age.years country   income</span></span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;        &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      1      w     66 - 100        75 Australia  42340</span></span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2      1      m     18 - 25         17 Germany      730</span></span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3      1      w     66 - 100        91 Australia  23360</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 1,858 x 4</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 1,858 × 4</span></span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID .srcID .tgtID weight</span></span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;</span></span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 32     13     18      0.333</span></span>
@@ -395,7 +395,7 @@ threefiles_to_egor()</code></pre>
 <p>The different data levels of an egor object can be manipulated using square bracket subsetting or the <code>subset()</code> function.</p>
 <p>Ego level:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>e1[e1<span class="sc">$</span>ego<span class="sc">$</span>age.years <span class="sc">&gt;</span> <span class="dv">35</span>, ]</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data ([32mactive[39m): 23 x 6</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data ([32mactive[39m): 23 × 6</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID sex   age      age.years country income</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;        &lt;int&gt; &lt;fct&gt;    &lt;dbl&gt;</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      w     36 - 45         45 USA      36135</span></span>
@@ -403,13 +403,13 @@ threefiles_to_egor()</code></pre>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 5      m     56 - 65         56 Germany  14600</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 7      w     36 - 45         43 Poland   15695</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 9      w     66 - 100        73 Poland   31390</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 334 x 7</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 334 × 7</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .altID .egoID sex   age      age.years country   income</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;        &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      1      w     66 - 100        75 Australia  42340</span></span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2      1      m     18 - 25         17 Germany      730</span></span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3      1      w     66 - 100        91 Australia  23360</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 1,296 x 4</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 1,296 × 4</span></span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID .srcID .tgtID weight</span></span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;</span></span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 18     11     22      0.667</span></span>
@@ -417,7 +417,7 @@ threefiles_to_egor()</code></pre>
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 22     3      15      0.667</span></span></code></pre></div>
 <p>Alter level:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(e1, e1<span class="sc">$</span>alter<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">&quot;w&quot;</span>, <span class="at">unit =</span> <span class="st">&quot;alter&quot;</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data ([32mactive[39m): 32 x 6</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data ([32mactive[39m): 32 × 6</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID sex   age     age.years country   income</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;       &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      w     36 - 45        45 USA        36135</span></span>
@@ -425,13 +425,13 @@ threefiles_to_egor()</code></pre>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3      m     26 - 35        28 Australia  63875</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 4      w     0 - 17          2 USA        31755</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 5      m     56 - 65        56 Germany    14600</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 181 x 7</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 181 × 7</span></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .altID .egoID sex   age      age.years country   income</span></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;        &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      1      w     66 - 100        75 Australia  42340</span></span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 3      1      w     66 - 100        91 Australia  23360</span></span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 1      2      w     66 - 100        75 Australia  42340</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 281 x 4</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 281 × 4</span></span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID .srcID .tgtID weight</span></span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;</span></span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 18     11     22      0.667</span></span>
@@ -439,7 +439,7 @@ threefiles_to_egor()</code></pre>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 24     10     11      0.333</span></span></code></pre></div>
 <p>Alter-alter tie level:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(e1, e1<span class="sc">$</span>aatie<span class="sc">$</span>weight <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="at">unit =</span> <span class="st">&quot;aatie&quot;</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data ([32mactive[39m): 32 x 6</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data ([32mactive[39m): 32 × 6</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID sex   age     age.years country   income</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;       &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      w     36 - 45        45 USA        36135</span></span>
@@ -447,13 +447,13 @@ threefiles_to_egor()</code></pre>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3      m     26 - 35        28 Australia  63875</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 4      w     0 - 17          2 USA        31755</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 5      m     56 - 65        56 Germany    14600</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 478 x 7</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 478 × 7</span></span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .altID .egoID sex   age      age.years country   income</span></span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;        &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      1      w     66 - 100        75 Australia  42340</span></span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2      1      m     18 - 25         17 Germany      730</span></span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3      1      w     66 - 100        91 Australia  23360</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 1,241 x 4</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 1,241 × 4</span></span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID .srcID .tgtID weight</span></span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;</span></span>
 <span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 18     11     22      0.667</span></span>
@@ -466,7 +466,7 @@ threefiles_to_egor()</code></pre>
 <p>If the manipulation leads to the deletion of egos, the respective alters and alter-alter ties are deleted as well. Similarly deletions of alters lead to the exclusion of the alter-alter ties of the deleted alters.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>e1 <span class="sc">%&gt;%</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(income <span class="sc">&gt;</span> <span class="dv">36000</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data ([32mactive[39m): 13 x 6</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data ([32mactive[39m): 13 × 6</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID sex   age      age.years country   income</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;        &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      w     36 - 45         45 USA        36135</span></span>
@@ -474,13 +474,13 @@ threefiles_to_egor()</code></pre>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 8      m     0 - 17           1 Australia  37960</span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 10     w     66 - 100        74 Germany    43435</span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 11     m     66 - 100        81 Germany    71905</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 192 x 7</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 192 × 7</span></span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .altID .egoID sex   age      age.years country   income</span></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;        &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      1      w     66 - 100        75 Australia  42340</span></span>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2      1      m     18 - 25         17 Germany      730</span></span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3      1      w     66 - 100        91 Australia  23360</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 703 x 4</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 703 × 4</span></span>
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID .srcID .tgtID weight</span></span>
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;</span></span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 22     3      15      0.667</span></span>
@@ -490,13 +490,13 @@ threefiles_to_egor()</code></pre>
 <span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>e1 <span class="sc">%&gt;%</span> </span>
 <span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(alter) <span class="sc">%&gt;%</span> </span>
 <span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;USA&quot;</span>, <span class="st">&quot;Poland&quot;</span>))</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data: 32 x 6</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data: 32 × 6</span></span>
 <span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID sex   age     age.years country   income</span></span>
 <span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;       &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      w     36 - 45        45 USA        36135</span></span>
 <span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2      m     36 - 45        37 Germany    35040</span></span>
 <span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3      m     26 - 35        28 Australia  63875</span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data ([32mactive[39m): 239 x 7</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data ([32mactive[39m): 239 × 7</span></span>
 <span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .altID .egoID sex   age      age.years country income</span></span>
 <span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;        &lt;int&gt; &lt;fct&gt;    &lt;dbl&gt;</span></span>
 <span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 4      1      m     0 - 17          10 USA      27010</span></span>
@@ -504,7 +504,7 @@ threefiles_to_egor()</code></pre>
 <span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 6      1      m     0 - 17          10 USA      31755</span></span>
 <span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 8      1      m     66 - 100        97 USA      67890</span></span>
 <span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 4      2      m     0 - 17          10 USA      27010</span></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 454 x 4</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data: 454 × 4</span></span>
 <span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID .srcID .tgtID weight</span></span>
 <span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;</span></span>
 <span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 32     13     18      0.333</span></span>
@@ -514,19 +514,19 @@ threefiles_to_egor()</code></pre>
 <span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>e1 <span class="sc">%&gt;%</span> </span>
 <span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(aatie) <span class="sc">%&gt;%</span> </span>
 <span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(weight <span class="sc">&gt;</span> <span class="fl">0.7</span>)</span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data: 32 x 6</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # EGO data: 32 × 6</span></span>
 <span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID sex   age     age.years country   income</span></span>
 <span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;       &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      w     36 - 45        45 USA        36135</span></span>
 <span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2      m     36 - 45        37 Germany    35040</span></span>
 <span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3      m     26 - 35        28 Australia  63875</span></span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 478 x 7</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ALTER data: 478 × 7</span></span>
 <span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .altID .egoID sex   age      age.years country   income</span></span>
 <span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;        &lt;int&gt; &lt;fct&gt;      &lt;dbl&gt;</span></span>
 <span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1      1      w     66 - 100        75 Australia  42340</span></span>
 <span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 2      1      m     18 - 25         17 Germany      730</span></span>
 <span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 3      1      w     66 - 100        91 Australia  23360</span></span>
-<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data ([32mactive[39m): 598 x 4</span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # AATIE data ([32mactive[39m): 598 × 4</span></span>
 <span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .egoID .srcID .tgtID weight</span></span>
 <span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;</span></span>
 <span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 19     5      6           1</span></span>
@@ -554,7 +554,7 @@ threefiles_to_egor()</code></pre>
 <div id="density" class="section level3">
 <h3>Density</h3>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ego_density</span>(e1)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 32 x 2</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 32 × 2</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .egoID density</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;    &lt;dbl&gt;</span></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 1        0.5  </span></span>
@@ -654,7 +654,7 @@ threefiles_to_egor()</code></pre>
 <div id="diversity" class="section level3">
 <h3>Diversity</h3>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">alts_diversity_count</span>(e1, <span class="st">&quot;age&quot;</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 32 x 2</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 32 × 2</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .egoID diversity</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 1              3</span></span>
@@ -669,7 +669,7 @@ threefiles_to_egor()</code></pre>
 <span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 10             3</span></span>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 22 more rows</span></span>
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="fu">alts_diversity_entropy</span>(e1, <span class="st">&quot;age&quot;</span>)</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 32 x 2</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 32 × 2</span></span>
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .egoID entropy</span></span>
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;    &lt;dbl&gt;</span></span>
 <span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 1         1.41</span></span>
@@ -687,7 +687,7 @@ threefiles_to_egor()</code></pre>
 <div id="ego-alter-homophily-ei-index" class="section level3">
 <h3>Ego-Alter Homophily (EI-Index)</h3>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comp_ei</span>(e1, <span class="st">&quot;age&quot;</span>, <span class="st">&quot;age&quot;</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 32 x 2</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 32 × 2</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .egoID      ei</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;    &lt;dbl&gt;</span></span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 1       1     </span></span>
@@ -798,7 +798,7 @@ threefiles_to_egor()</code></pre>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> e1,</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">alter_var_name =</span> <span class="st">&quot;country&quot;</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 32 x 11</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 32 × 11</span></span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .egoID dy_cou_Australia_… dy_cou_Australia… dy_cou_Australi… dy_cou_Australi…</span></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;               &lt;int&gt;             &lt;int&gt;            &lt;int&gt;            &lt;int&gt;</span></span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 1                       1                 2                2                5</span></span>
@@ -822,7 +822,7 @@ threefiles_to_egor()</code></pre>
 <span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">alter_var_name =</span> <span class="st">&quot;country&quot;</span>,</span>
 <span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">return_as =</span> <span class="st">&quot;long&quot;</span></span>
 <span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 292 x 3</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 292 × 3</span></span>
 <span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .egoID dyads                   n</span></span>
 <span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;               &lt;int&gt;</span></span>
 <span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 1      Australia_Australia     1</span></span>
@@ -842,7 +842,7 @@ threefiles_to_egor()</code></pre>
 <p><code>comp_ply()</code> applies a user-defined function on an alter attribute and returns a numeric vector with the results. It can be used to apply base R functions like <code>sd()</code>, <code>mean()</code> or functions from other packages.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>e2 <span class="ot">&lt;-</span> <span class="fu">make_egor</span>(<span class="dv">15</span>, <span class="dv">32</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">comp_ply</span>(e2, <span class="st">&quot;age.years&quot;</span>, sd, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 15 x 2</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 15 × 2</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .egoID result</span></span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span></span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1      1   27.0</span></span>
