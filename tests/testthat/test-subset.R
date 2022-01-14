@@ -50,11 +50,12 @@ test_that("subset.egor() works as specified in docs", {
   test1 <- subset(egor32, sex == "m", unit="ego")
   expect_equal(as.character(unique(test1$ego$variables$sex)), "m")
   
-  test2 <- subset(egor32, age.years == 45)
-  expect_equal(test2$ego$variables$age.years, 45)
+  test2 <- subset(egor32, country == "Australia")
+  expect_equal(test2$ego$variables$country[1], "Australia")
   
   test3 <- subset(egor32, ego$sex == "m", unit = "alter")
-  test3a <- filter(test3, .egoID %in% unique(test3$alter$.egoID)) %>% 
+  test3a <- test3 %>% 
+    filter(.egoID %in% unique(test3$alter$.egoID)) %>% 
     pull(sex) %>% as.character()
   expect_equal(unique(test3a), "m")  
   
@@ -81,11 +82,11 @@ test_that("subset() works when no aaties are specified and ID vars are character
       )
     )
   expect_error(subset(x = e1, something == 1, unit = "alter"), NA)
-  expect_error(e1 |> 
-    activate(alter) |> 
+  expect_error(e1 %>% 
+    activate(alter) %>% 
     filter(something == 1), NA)
   expect_error(subset(e2, something == 1, unit = "alter"), NA)
-  expect_error(e2 |> 
-    activate(alter) |> 
+  expect_error(e2 %>% 
+    activate(alter) %>% 
     filter(something == 1), NA)
 })
