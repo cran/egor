@@ -1,3 +1,14 @@
+# egor 1.22.5
+
+- speed up tests and examples for CRAN
+- changed argument names in `onefile_to_egor()` and `twofiles_to_egor()`
+- bugs
+
+# egor 1.22.3
+
+- dropped AppVeyor CI
+- some house keeping
+
 # egor 1.22.1
 
 - bug fixes

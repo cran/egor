@@ -4,7 +4,7 @@ test_that(
   "onefile_to_egor() works.",
   {
     path_to_one_file_8 <- system.file("extdata", "one_file_8.csv", package = "egor")
-    egos_8 <- read.csv2(path_to_one_file_8, row.names = 1)
+    egos_8 <- read.csv2(path_to_one_file_8)
     
     attr.start.col <- which(names(egos_8) == "alter.sex.1")
     attr.end.col <- which(names(egos_8) == "alter.age.8")
@@ -25,8 +25,8 @@ test_that(
   {
     path_to_alters_8.csv <- system.file("extdata", "alters_8.csv", package = "egor")
     path_to_one_file_8 <- system.file("extdata", "one_file_8.csv", package = "egor")
-    egos_8 <- read.csv2(path_to_one_file_8, row.names = 1)
-    alters_8 <- read.csv2(path_to_alters_8.csv, row.names = 1)
+    egos_8 <- read.csv2(path_to_one_file_8)
+    alters_8 <- read.csv2(path_to_alters_8.csv)
     
     #attr.start.col <- which(names(egos_8) == "alter.sex.1")
     #attr.end.col <- which(names(egos_8) == "alter.age.8")
@@ -36,8 +36,8 @@ test_that(
       twofiles_to_egor(
         egos = egos_8,
         alters = alters_8,
-        e.max.alters = 8,
-        e.first.var = dy.first.var),
+        max.alters = 8,
+        aa.first.var = dy.first.var),
       NA)
     
     alters_8$selection1 <-
@@ -57,8 +57,8 @@ test_that(
           source = "Source",
           target = "Target"
         ),
-        e.max.alters = 8,
-        e.first.var = dy.first.var,
+        max.alters = 8,
+        aa.first.var = dy.first.var,
         selection = "selection1"),
         
       NA)
@@ -73,8 +73,8 @@ test_that(
           source = "Source",
           target = "Target"
         ),
-        e.max.alters = 8,
-        e.first.var = dy.first.var,
+        max.alters = 8,
+        aa.first.var = dy.first.var,
         selection = "selection2"),
       
       NA)
@@ -89,8 +89,8 @@ test_that(
           source = "Source",
           target = "Target"
         ),
-        e.max.alters = 8,
-        e.first.var = dy.first.var,
+        max.alters = 8,
+        aa.first.var = dy.first.var,
         selection = "selection3"),
       
       NA)
@@ -110,8 +110,8 @@ test_that(
 #   which(names(egos_raw) == "b10_1_2") # Insert variable name of first alter-alter variable.
 #   transnat <- twofiles_to_egor(egos = egos_raw, 
 #                                alters = alteri_raw, 
-#                                e.max.alters = 8,
-#                                e.first.var = 12, 
+#                                max.alters = 8,
+#                                aa.first.var = 12, 
 #                                selection = "selected")
 #   a <- transnat$aatie %>% 
 #     filter(.egoID == 12) %>% 
