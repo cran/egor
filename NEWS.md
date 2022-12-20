@@ -1,8 +1,8 @@
-# egor 1.22.5
+# egor 1.22.12
 
-- speed up tests and examples for CRAN
-- changed argument names in `onefile_to_egor()` and `twofiles_to_egor()`
-- bugs
+- fixed printing issues (#80)
+- fixed layout issues for `clustered_graphs()` and `plot_egograms()`
+- fixed `tidyselect` deprecation warnings
 
 # egor 1.22.3
 

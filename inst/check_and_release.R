@@ -17,13 +17,6 @@ library(revdepcheck)
 revdep_reset()
 revdep_check(num_workers = 8)
 
-# Re-Build website
-
-pkgdown::build_site()
-
-
 # submit to cran ----
 
 devtools::release()
-
-
