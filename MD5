@@ -1,6 +1,6 @@
-00a6fcd9a6138343f73b674e95d0393e *DESCRIPTION
+400495ff65c4e7976d28ce5141ac43ef *DESCRIPTION
 5af3c305873b5b8deec616aeeb886aa9 *NAMESPACE
-a3a9a07b7c839534515b2809513d98f2 *NEWS.md
+983433f732741327eed93cd75b8afe94 *NEWS.md
 ca8c1d444d485a86280608243458da20 *R/activation.R
 aa82f0df65f92511230ac7ea7bb61023 *R/alter.design.R
 cb6e19d6e93434f49557f25f02725e97 *R/as_egor.R
@@ -27,8 +27,8 @@ ad9ac9c566720aa7ff9912844b805ede *R/read.egonet.R
 e5f6b384880e76884dfed75def36c372 *R/read.egonet.three.files.R
 fe62d594deacf711ecad6f7a13d4a268 *R/require_packages.R
 7e7c2554c677756a68523b6b2572b880 *R/rotate.R
-791822b0b1505daaec88aeb094c090c8 *R/subset.egor.R
-25d9ddaece381ea6842da1d3a3cc4bdc *R/wizz.R
+cf627ca85ccc3836ee5a57bedb59c169 *R/subset.egor.R
+2ec57f28c1f84bfe9f5adc0c5344dd05 *R/wizz.R
 bbd4a81ac745d433d9cb75529ced08a1 *R/zzz.R
 ea124a494ad7922985532ad3b308e4d5 *build/partial.rdb
 283c82b0596f2c3239c72ffbe97f8be4 *build/vignette.rds
@@ -45,13 +45,13 @@ d013a3bf129d92d69861d65d179fd794 *data/ego_df.rda
 710998f082fdf028498d9c7610af8c93 *inst/create_example_data.R
 912f45588d585911eacd0d4bc702523e *inst/doc/egor_allbus.R
 5831df419836c8ff11d81b2612720cb2 *inst/doc/egor_allbus.Rmd
-d598589fa563d5e70cccce718eaab882 *inst/doc/egor_allbus.html
+11756c960762ed7dbd3c1818536d9a78 *inst/doc/egor_allbus.html
 d128556a4504a36960d66608f6b5e127 *inst/doc/qualtrics.R
 e885fa77abcc82fd59f886f398e285ae *inst/doc/qualtrics.Rmd
 cc5f22cafef9758e2f67e98ee7d858d2 *inst/doc/qualtrics.html
 a56fe49c3880c8fb3c3c7e6b7b27fb5d *inst/doc/using_egor.R
 f9cffaa1b744fb664cd1a90faf6934ac *inst/doc/using_egor.Rmd
-cf82ab25b2b586f85c68658a458b9549 *inst/doc/using_egor.html
+d531d1cbf5594af3caab5db9937b4d35 *inst/doc/using_egor.html
 030ed2491b8926de663cad5dc4796d84 *inst/examples/ex_cg.R
 351a072aa2bf96c76bb576c6f4d44fd9 *inst/extdata/alters_32.csv
 2e1530504037928556c8ff645c7e5f18 *inst/extdata/alters_32/1.csv
@@ -211,7 +211,7 @@ d30864d7d5ad5d4819b740024e940e7f *man/composition.Rd
 a7f179b77d6cd23ca52454cd0444c303 *man/egor.Rd
 6ecebb214f2c9d2e214756608a0f485f *man/egor32.Rd
 ff5e68205af2c6a5b59ad5e702ca2d64 *man/egor_options.Rd
-8d0a2c7e226b3c378c64c16017202f16 *man/egor_vis_app.Rd
+966bc11ade1654dda2eb019029e4ff52 *man/egor_vis_app.Rd
 d81c1caee55981dddd670c7acb498ac4 *man/egos32.Rd
 5ba6d97fcd9711ec6dab178d4ef2499f *man/extract_egos_and_return.Rd
 d081c235016f6ec1124f23660b95b5f7 *man/figures/clustered_graphs.png
@@ -232,7 +232,7 @@ c3cecaec488af39ff5de16dbd97e78f1 *man/return_results.Rd
 cec7b814cc5acc04423643b86256bd88 *man/rotate_to_equilibrium.Rd
 db687e09a115abc1f4ba720052943a1f *man/rotate_xy.Rd
 564f711f7c5758b21f3cdde7d716a18c *man/rowlist.Rd
-7c0a8613fa60fcf01e34a3f5a55be936 *man/subset.egor.Rd
+ca71873d98ffc149c647d3a769746898 *man/subset.egor.Rd
 5975bfebef9e034049f714b90ceb9c3f *man/summary.egor.Rd
 11d5973ccab8a8b1de4b4a90fbe22697 *man/threefiles_to_egor.Rd
 a72fd43472b96c0dc66fceab44f5eb65 *man/transnat.Rd
@@ -249,7 +249,7 @@ be6c116dd82582d398400e7c745186e9 *man/wide.to.long.Rd
 0eedd5d0cb2ecfce7d2f373ba1453fd2 *tests/testthat/test-alts_diversity.R
 916ae62b279449dade4687c2f6eac17f *tests/testthat/test-as_egor.R
 278ecaf8d19698cbcb7d0530e9cfb83f *tests/testthat/test-as_nested_egor.R
-498828eaf8cb346c8d9afe1491b1d125 *tests/testthat/test-clustered_graphs.R
+64e19bc98f26ce82c158a82e6154044f *tests/testthat/test-clustered_graphs.R
 fae4e631bfb5d9cc977cc85d4412f383 *tests/testthat/test-composition.R
 d6e5a0aa51a583d868e812c0bea8190a *tests/testthat/test-conversions.R
 5087bcc856bdb640f251f7d87396b8d9 *tests/testthat/test-count_dyads.R
