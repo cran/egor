@@ -211,6 +211,47 @@ slice.egor <- function(.data, ...) {
   return_egor_with_result(.data, result)
 }
 
+#' @export
+#' @noRd
+#' @method slice_head egor
+slice_head.egor <- function(.data, ...) {
+  result <- slice_head(tibble_egos(.data)[[attr(.data, "active")]], ...)
+  return_egor_with_result(.data, result)
+}
+
+#' @export
+#' @noRd
+#' @method slice_tail egor
+slice_tail.egor <- function(.data, ...) {
+  result <- slice_tail(tibble_egos(.data)[[attr(.data, "active")]], ...)
+  return_egor_with_result(.data, result)
+}
+
+#' @export
+#' @noRd
+#' @method slice_min egor
+slice_min.egor <- function(.data, ...) {
+  result <- slice_min(tibble_egos(.data)[[attr(.data, "active")]], ...)
+  return_egor_with_result(.data, result)
+}
+
+
+#' @export
+#' @noRd
+#' @method slice_max egor
+slice_max.egor <- function(.data, ...) {
+  result <- slice_max(tibble_egos(.data)[[attr(.data, "active")]], ...)
+  return_egor_with_result(.data, result)
+}
+
+#' @export
+#' @noRd
+#' @method slice_sample egor
+slice_sample.egor <- function(.data, ...) {
+  result <- slice_sample(tibble_egos(.data)[[attr(.data, "active")]], ...)
+  return_egor_with_result(.data, result)
+}
+
 
 # group_by count tally summarise ------------------------------------------
 
@@ -906,13 +947,24 @@ append_cols <- function(.egor, ...) {
 
 #' @export
 #' @noRd
+#' @method distinct egor
+distinct.egor <- function(.data,
+                          ...,
+                          .keep_all = FALSE) {
+  result <-
+    distinct(.data[[attr(.data, "active")]], ..., .keep_all = .keep_all)
+  return_egor_with_result(.data, result)
+}
+
+#' @export
+#' @noRd
 #' @method distinct_all egor
 distinct_all.egor <- function(.tbl,
                               .funs = list(),
                               ...,
                               .keep_all = FALSE) {
   result <-
-    distinct_all(.tbl[[attr(.tbl, "active")]], .funs = list(), ..., .keep_all = FALSE)
+    distinct_all(.tbl[[attr(.tbl, "active")]], .funs = .funs, ..., .keep_all = .keep_all)
   return_egor_with_result(.tbl, result)
 }
 
@@ -925,7 +977,7 @@ distinct_at.egor <- function(.tbl,
                              ...,
                              .keep_all = FALSE) {
   result <-
-    distinct_at(.tbl[[attr(.tbl, "active")]], .vars, .funs = list(), ..., .keep_all = FALSE)
+    distinct_at(.tbl[[attr(.tbl, "active")]], .vars, .funs = .funs, ..., .keep_all = .keep_all)
   return_egor_with_result(.tbl, result)
 }
 
@@ -940,9 +992,9 @@ distinct_if.egor <- function(.tbl,
   result <-
     distinct_if(.tbl[[attr(.tbl, "active")]],
                 .predicate,
-                .funs = list(),
+                .funs = .funs,
                 ...,
-                .keep_all = FALSE)
+                .keep_all = .keep_all)
   return_egor_with_result(.tbl, result)
 }
 

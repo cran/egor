@@ -44,6 +44,9 @@ test_that("methods for dplyr are working",
               egor::activate(e, "alter") %>%
                 filter(sex == "w")
               
+
+              # slice and slice_* -------------------------------------
+
               slice(e, 1)
               
               activate(e, alter) %>%
@@ -51,6 +54,48 @@ test_that("methods for dplyr are working",
               
               activate(e, aatie) %>%
                 slice(1:2)
+              
+              slice_head(e, n = 1)
+              
+              activate(e, alter) %>%
+                slice_head() # defaults to n = 1
+              
+              activate(e, aatie) %>%
+                slice_head(prop = .2)
+              
+              slice_tail(e, n = 1)
+              
+              activate(e, alter) %>%
+                slice_tail() # defaults to n = 1
+              
+              activate(e, aatie) %>%
+                slice_tail(prop = .2)
+              
+              slice_min(e, age.years, n = 2)
+              
+              activate(e, alter) %>%
+                slice_min(age.years) # defaults to n = 1
+              
+              activate(e, aatie) %>%
+                slice_min(weight, prop = .2)
+              
+              slice_max(e, age.years, n = 1)
+              
+              activate(e, alter) %>%
+                slice_max(age.years) # defaults to n = 1
+              
+              activate(e, aatie) %>%
+                slice_max(weight, prop = .2)
+              
+              slice_sample(e, n = 1)
+              
+              activate(e, alter) %>%
+                slice_sample() # defaults to n = 1
+              
+              activate(e, aatie) %>%
+                slice_sample(prop = .01)
+              
+              # summarise ----------------------------------------------
               
               e %>%
                 activate("alter") %>%
@@ -82,10 +127,32 @@ test_that("methods for dplyr are working",
           })
 
 test_that(
+  "dplyr methods work with srvyr egor objects",
+  {
+    data(egor32)
+    expect_error(slice_max(egor32, age.years), NA)
+    expect_error(arrange(egor32, age.years), NA)
+})
+
+test_that(
+  "distinct() works",
+  {
+    e <- make_egor(10, 10)
+    expect_error(distinct(e), NA)
+    
+    #data(egor32)
+    #distinct(egor32)
+  }
+)
+
+test_that(
   "pull works",
   {
     e <- make_egor(10, 10)
     expect_error(pull(e, sex), NA)
+    
+    data(egor32)
+    pull(egor32, sex)
   }
 )
 
